@@ -4,6 +4,8 @@ import { useRef } from "react";
 import { Phone, MessageCircle, Clock, MapPin, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+const whatsappMessage = encodeURIComponent("مرحباً، أريد حجز موعد للعلاج الوظيفي");
+
 const contactInfo = [
   {
     icon: Phone,
@@ -15,7 +17,7 @@ const contactInfo = [
     icon: MessageCircle,
     label: "واتساب",
     value: "تواصل الآن",
-    href: "https://wa.me/972501234567?text=مرحباً، أريد حجز موعد للعلاج الوظيفي",
+    href: `https://wa.me/972501234567?text=${whatsappMessage}`,
     isWhatsApp: true,
   },
   {
@@ -37,7 +39,7 @@ export const ContactSection = () => {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   const openWhatsApp = () => {
-    window.open("https://wa.me/972501234567?text=مرحباً، أريد حجز موعد للعلاج الوظيفي", "_blank");
+    window.open(`https://wa.me/972501234567?text=${whatsappMessage}`, "_blank");
   };
 
   return (
