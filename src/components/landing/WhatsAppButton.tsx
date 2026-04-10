@@ -3,7 +3,8 @@ import { motion } from "framer-motion";
 
 export const WhatsAppButton = () => {
   const openWhatsApp = () => {
-    window.open("https://wa.me/972501234567?text=مرحباً، أريد حجز موعد للعلاج الوظيفي", "_blank");
+    const message = encodeURIComponent("مرحباً، أريد حجز موعد للعلاج الوظيفي");
+    window.open(`https://wa.me/972501234567?text=${message}`, "_blank");
   };
 
   return (

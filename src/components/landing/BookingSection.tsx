@@ -152,6 +152,7 @@ export const BookingSection = () => {
                   onChange={handleChange}
                   placeholder="أدخل اسم الطفل"
                   className="h-12 rounded-xl"
+                  maxLength={100}
                   required
                 />
               </div>
@@ -169,6 +170,7 @@ export const BookingSection = () => {
                   onChange={handleChange}
                   placeholder="مثال: 5 سنوات"
                   className="h-12 rounded-xl"
+                  maxLength={10}
                 />
               </div>
 
@@ -185,6 +187,7 @@ export const BookingSection = () => {
                   onChange={handleChange}
                   placeholder="أدخل اسمك الكامل"
                   className="h-12 rounded-xl"
+                  maxLength={100}
                   required
                 />
               </div>
@@ -203,6 +206,7 @@ export const BookingSection = () => {
                   onChange={handleChange}
                   placeholder="05X-XXXXXXX"
                   className="h-12 rounded-xl"
+                  maxLength={20}
                   dir="ltr"
                   required
                 />
