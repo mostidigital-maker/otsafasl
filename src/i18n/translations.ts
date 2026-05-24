@@ -6,7 +6,7 @@ export const languages: { code: Language; label: string; dir: "rtl" | "ltr" }[] 
   { code: "en", label: "English", dir: "ltr" },
 ];
 
-export const translations = {
+const dict = {
   ar: {
     // Header / Nav
     nav: {
