@@ -451,8 +451,9 @@ const dict = {
     },
     lang: { switch: "Language" },
   },
-} as const;
+};
 
 export type TranslationShape = typeof dict.ar;
 export const translations: Record<Language, TranslationShape> = dict;
+
 
