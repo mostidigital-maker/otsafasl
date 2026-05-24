@@ -453,4 +453,6 @@ const dict = {
   },
 } as const;
 
-export type TranslationShape = typeof translations.ar;
+export type TranslationShape = typeof dict.ar;
+export const translations: Record<Language, TranslationShape> = dict;
+
