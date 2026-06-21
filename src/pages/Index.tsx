@@ -8,27 +8,22 @@ import { BookingSection } from "@/components/landing/BookingSection";
 import { ContactSection } from "@/components/landing/ContactSection";
 import { Footer } from "@/components/landing/Footer";
 import { WhatsAppButton } from "@/components/landing/WhatsAppButton";
-import { LanguageProvider } from "@/contexts/LanguageContext";
 
-const Index = () => {
-  return (
-    <LanguageProvider>
-      <div className="min-h-screen bg-background font-cairo">
-        <Header />
-        <main>
-          <HeroSection />
-          <AboutSection />
-          <WhyUsSection />
-          <ServicesSection />
-          <InsuranceSection />
-          <BookingSection />
-          <ContactSection />
-        </main>
-        <Footer />
-        <WhatsAppButton />
-      </div>
-    </LanguageProvider>
-  );
-};
+const Index = () => (
+  <div className="min-h-screen bg-background font-cairo">
+    <Header />
+    <main>
+      <HeroSection />
+      <AboutSection />
+      <WhyUsSection />
+      <ServicesSection />
+      <InsuranceSection />
+      <BookingSection />
+      <ContactSection />
+    </main>
+    <Footer />
+    <WhatsAppButton />
+  </div>
+);
 
 export default Index;
