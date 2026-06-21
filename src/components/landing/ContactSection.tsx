@@ -11,8 +11,8 @@ export const ContactSection = () => {
   const whatsappMessage = encodeURIComponent(t.common.whatsappMessage);
 
   const contactInfo = [
-    { icon: Phone, label: t.contact.phoneLabel, value: "050-123-4567", href: "tel:+972501234567", isWhatsApp: false },
-    { icon: MessageCircle, label: t.contact.whatsappLabel, value: t.contact.whatsappValue, href: `https://wa.me/972501234567?text=${whatsappMessage}`, isWhatsApp: true },
+    { icon: Phone, label: t.contact.phoneLabel, value: "050-577-2680", href: "tel:+972505772680", isWhatsApp: false },
+    { icon: MessageCircle, label: t.contact.whatsappLabel, value: t.contact.whatsappValue, href: `https://wa.me/972505772680?text=${whatsappMessage}`, isWhatsApp: true },
     { icon: Mail, label: t.contact.emailLabel, value: "info@ot-clinic.com", href: "mailto:info@ot-clinic.com", isWhatsApp: false },
   ];
 
