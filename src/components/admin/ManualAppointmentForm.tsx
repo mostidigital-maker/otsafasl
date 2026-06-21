@@ -63,7 +63,7 @@ export const ManualAppointmentForm = () => {
           </Select>
         </div>
         <div className="space-y-2">
-          <Label>{t.booking.preferredDate ?? "Date & time"}</Label>
+          <Label>{t.admin.colDate} / {t.admin.colTime}</Label>
           <Input type="datetime-local" value={form.slot_at} onChange={(e) => setForm({ ...form, slot_at: e.target.value })} dir="ltr" required />
         </div>
         <div className="space-y-2"><Label>{t.booking.childName}</Label><Input value={form.child_name} onChange={(e) => setForm({ ...form, child_name: e.target.value })} maxLength={100} required /></div>
