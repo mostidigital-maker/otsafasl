@@ -7,7 +7,7 @@ export const WhatsAppButton = () => {
 
   const openWhatsApp = () => {
     const message = encodeURIComponent(t.common.whatsappMessage);
-    window.open(`https://wa.me/972501234567?text=${message}`, "_blank");
+    window.open(`https://wa.me/972505772680?text=${message}`, "_blank");
   };
 
   return (

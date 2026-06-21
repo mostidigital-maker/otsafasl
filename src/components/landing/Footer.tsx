@@ -36,10 +36,10 @@ export const Footer = () => {
           <div className="text-center md:text-end">
             <h4 className="font-semibold mb-4">{t.footer.contactUs}</h4>
             <div className="flex justify-center md:justify-end gap-4">
-              <a href="tel:+972501234567" className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-primary-foreground/20 transition-colors">
+              <a href="tel:+972505772680" className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-primary-foreground/20 transition-colors">
                 <Phone className="w-5 h-5" />
               </a>
-              <a href="https://wa.me/972501234567" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-accent flex items-center justify-center hover:bg-accent/90 transition-colors">
+              <a href="https://wa.me/972505772680" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-accent flex items-center justify-center hover:bg-accent/90 transition-colors">
                 <MessageCircle className="w-5 h-5 text-accent-foreground" />
               </a>
             </div>
