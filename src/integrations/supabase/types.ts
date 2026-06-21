@@ -14,16 +14,276 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      appointments: {
+        Row: {
+          child_age: string | null
+          child_name: string
+          created_at: string
+          created_by_admin: boolean
+          duration_minutes: number
+          email: string
+          id: string
+          language: Database["public"]["Enums"]["app_language"]
+          location_id: string
+          notes: string | null
+          parent_name: string
+          phone: string
+          slot_at: string
+          status: Database["public"]["Enums"]["appointment_status"]
+          updated_at: string
+        }
+        Insert: {
+          child_age?: string | null
+          child_name: string
+          created_at?: string
+          created_by_admin?: boolean
+          duration_minutes?: number
+          email: string
+          id?: string
+          language?: Database["public"]["Enums"]["app_language"]
+          location_id: string
+          notes?: string | null
+          parent_name: string
+          phone: string
+          slot_at: string
+          status?: Database["public"]["Enums"]["appointment_status"]
+          updated_at?: string
+        }
+        Update: {
+          child_age?: string | null
+          child_name?: string
+          created_at?: string
+          created_by_admin?: boolean
+          duration_minutes?: number
+          email?: string
+          id?: string
+          language?: Database["public"]["Enums"]["app_language"]
+          location_id?: string
+          notes?: string | null
+          parent_name?: string
+          phone?: string
+          slot_at?: string
+          status?: Database["public"]["Enums"]["appointment_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appointments_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blocked_slots: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          end_at: string
+          id: string
+          location_id: string
+          reason: string | null
+          start_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          end_at: string
+          id?: string
+          location_id: string
+          reason?: string | null
+          start_at: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          end_at?: string
+          id?: string
+          location_id?: string
+          reason?: string | null
+          start_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blocked_slots_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      locations: {
+        Row: {
+          address_ar: string | null
+          address_en: string | null
+          address_he: string | null
+          created_at: string
+          id: string
+          is_active: boolean
+          name_ar: string
+          name_en: string
+          name_he: string
+          slug: string
+          sort_order: number
+        }
+        Insert: {
+          address_ar?: string | null
+          address_en?: string | null
+          address_he?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name_ar: string
+          name_en: string
+          name_he: string
+          slug: string
+          sort_order?: number
+        }
+        Update: {
+          address_ar?: string | null
+          address_en?: string | null
+          address_he?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name_ar?: string
+          name_en?: string
+          name_he?: string
+          slug?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      working_hours: {
+        Row: {
+          closes_at: string
+          created_at: string
+          id: string
+          is_active: boolean
+          location_id: string
+          opens_at: string
+          slot_minutes: number
+          weekday: number
+        }
+        Insert: {
+          closes_at: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          location_id: string
+          opens_at: string
+          slot_minutes?: number
+          weekday: number
+        }
+        Update: {
+          closes_at?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          location_id?: string
+          opens_at?: string
+          slot_minutes?: number
+          weekday?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "working_hours_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
-      [_ in never]: never
+      taken_slots: {
+        Row: {
+          duration_minutes: number | null
+          location_id: string | null
+          slot_at: string | null
+        }
+        Insert: {
+          duration_minutes?: number | null
+          location_id?: string | null
+          slot_at?: string | null
+        }
+        Update: {
+          duration_minutes?: number | null
+          location_id?: string | null
+          slot_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appointments_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_language: "ar" | "he" | "en"
+      app_role: "admin"
+      appointment_status: "pending" | "confirmed" | "cancelled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +410,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_language: ["ar", "he", "en"],
+      app_role: ["admin"],
+      appointment_status: ["pending", "confirmed", "cancelled"],
+    },
   },
 } as const
