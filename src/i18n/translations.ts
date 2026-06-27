@@ -86,7 +86,8 @@ const dict = {
     },
     admin: {
       title: "لوحة التحكم", signOut: "خروج",
-      tabs: { appointments: "المواعيد", workingHours: "ساعات العمل", blocked: "الأوقات المحجوبة", manual: "إضافة يدوية" },
+      tabs: { appointments: "المواعيد", calendar: "التقويم", workingHours: "ساعات العمل", blocked: "الأوقات المحجوبة", manual: "إضافة يدوية" },
+      calendar: { month: "شهر", week: "أسبوع", today: "اليوم", prev: "السابق", next: "التالي", noOnDay: "لا توجد مواعيد", allLocations: "كل المواقع", monthsShort: ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"] },
       filterAll: "الكل", filterPending: "بانتظار التأكيد", filterConfirmed: "مؤكد", filterCancelled: "ملغى",
       colDate: "التاريخ", colTime: "الوقت", colLocation: "المكان", colChild: "الطفل", colParent: "ولي الأمر", colPhone: "هاتف", colEmail: "بريد", colLang: "لغة", colStatus: "الحالة", colActions: "إجراءات",
       confirm: "تأكيد", cancel: "إلغاء", delete: "حذف", confirmed: "تم التأكيد", cancelled: "تم الإلغاء", noAppointments: "لا توجد مواعيد",
@@ -175,7 +176,8 @@ const dict = {
     },
     admin: {
       title: "לוח בקרה", signOut: "יציאה",
-      tabs: { appointments: "תורים", workingHours: "שעות פעילות", blocked: "שעות חסומות", manual: "הוספה ידנית" },
+      tabs: { appointments: "תורים", calendar: "יומן", workingHours: "שעות פעילות", blocked: "שעות חסומות", manual: "הוספה ידנית" },
+      calendar: { month: "חודש", week: "שבוע", today: "היום", prev: "הקודם", next: "הבא", noOnDay: "אין תורים", allLocations: "כל המיקומים", monthsShort: ["ינואר","פברואר","מרץ","אפריל","מאי","יוני","יולי","אוגוסט","ספטמבר","אוקטובר","נובמבר","דצמבר"] },
       filterAll: "הכל", filterPending: "ממתין לאישור", filterConfirmed: "מאושר", filterCancelled: "מבוטל",
       colDate: "תאריך", colTime: "שעה", colLocation: "מיקום", colChild: "ילד", colParent: "הורה", colPhone: "טלפון", colEmail: "אימייל", colLang: "שפה", colStatus: "סטטוס", colActions: "פעולות",
       confirm: "אשר", cancel: "בטל", delete: "מחק", confirmed: "אושר", cancelled: "בוטל", noAppointments: "אין תורים",
@@ -264,7 +266,8 @@ const dict = {
     },
     admin: {
       title: "Admin Dashboard", signOut: "Sign out",
-      tabs: { appointments: "Appointments", workingHours: "Working hours", blocked: "Blocked times", manual: "Add manual" },
+      tabs: { appointments: "Appointments", calendar: "Calendar", workingHours: "Working hours", blocked: "Blocked times", manual: "Add manual" },
+      calendar: { month: "Month", week: "Week", today: "Today", prev: "Prev", next: "Next", noOnDay: "No appointments", allLocations: "All locations", monthsShort: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"] },
       filterAll: "All", filterPending: "Pending", filterConfirmed: "Confirmed", filterCancelled: "Cancelled",
       colDate: "Date", colTime: "Time", colLocation: "Location", colChild: "Child", colParent: "Parent", colPhone: "Phone", colEmail: "Email", colLang: "Lang", colStatus: "Status", colActions: "Actions",
       confirm: "Confirm", cancel: "Cancel", delete: "Delete", confirmed: "Confirmed", cancelled: "Cancelled", noAppointments: "No appointments",
