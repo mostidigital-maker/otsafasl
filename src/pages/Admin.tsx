@@ -62,13 +62,15 @@ const Admin = () => {
       </header>
 
       <main className="container mx-auto px-4 py-6">
-        <Tabs defaultValue="appointments">
+        <Tabs defaultValue="calendar">
           <TabsList className="mb-6 flex-wrap">
+            <TabsTrigger value="calendar">{t.admin.tabs.calendar}</TabsTrigger>
             <TabsTrigger value="appointments">{t.admin.tabs.appointments}</TabsTrigger>
             <TabsTrigger value="manual">{t.admin.tabs.manual}</TabsTrigger>
             <TabsTrigger value="workingHours">{t.admin.tabs.workingHours}</TabsTrigger>
             <TabsTrigger value="blocked">{t.admin.tabs.blocked}</TabsTrigger>
           </TabsList>
+          <TabsContent value="calendar"><AppointmentsCalendar /></TabsContent>
           <TabsContent value="appointments"><AppointmentsList /></TabsContent>
           <TabsContent value="manual"><ManualAppointmentForm /></TabsContent>
           <TabsContent value="workingHours"><WorkingHoursManager /></TabsContent>
