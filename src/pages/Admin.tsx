@@ -6,6 +6,7 @@ import { LogOut } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { AppointmentsList } from "@/components/admin/AppointmentsList";
+import { AppointmentsCalendar } from "@/components/admin/AppointmentsCalendar";
 import { WorkingHoursManager } from "@/components/admin/WorkingHoursManager";
 import { BlockedSlotsManager } from "@/components/admin/BlockedSlotsManager";
 import { ManualAppointmentForm } from "@/components/admin/ManualAppointmentForm";
