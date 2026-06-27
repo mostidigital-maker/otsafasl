@@ -176,7 +176,8 @@ const dict = {
     },
     admin: {
       title: "לוח בקרה", signOut: "יציאה",
-      tabs: { appointments: "תורים", workingHours: "שעות פעילות", blocked: "שעות חסומות", manual: "הוספה ידנית" },
+      tabs: { appointments: "תורים", calendar: "יומן", workingHours: "שעות פעילות", blocked: "שעות חסומות", manual: "הוספה ידנית" },
+      calendar: { month: "חודש", week: "שבוע", today: "היום", prev: "הקודם", next: "הבא", noOnDay: "אין תורים", allLocations: "כל המיקומים", monthsShort: ["ינואר","פברואר","מרץ","אפריל","מאי","יוני","יולי","אוגוסט","ספטמבר","אוקטובר","נובמבר","דצמבר"] },
       filterAll: "הכל", filterPending: "ממתין לאישור", filterConfirmed: "מאושר", filterCancelled: "מבוטל",
       colDate: "תאריך", colTime: "שעה", colLocation: "מיקום", colChild: "ילד", colParent: "הורה", colPhone: "טלפון", colEmail: "אימייל", colLang: "שפה", colStatus: "סטטוס", colActions: "פעולות",
       confirm: "אשר", cancel: "בטל", delete: "מחק", confirmed: "אושר", cancelled: "בוטל", noAppointments: "אין תורים",
