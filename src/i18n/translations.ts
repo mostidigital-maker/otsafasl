@@ -86,7 +86,8 @@ const dict = {
     },
     admin: {
       title: "لوحة التحكم", signOut: "خروج",
-      tabs: { appointments: "المواعيد", workingHours: "ساعات العمل", blocked: "الأوقات المحجوبة", manual: "إضافة يدوية" },
+      tabs: { appointments: "المواعيد", calendar: "التقويم", workingHours: "ساعات العمل", blocked: "الأوقات المحجوبة", manual: "إضافة يدوية" },
+      calendar: { month: "شهر", week: "أسبوع", today: "اليوم", prev: "السابق", next: "التالي", noOnDay: "لا توجد مواعيد", allLocations: "كل المواقع", monthsShort: ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"] },
       filterAll: "الكل", filterPending: "بانتظار التأكيد", filterConfirmed: "مؤكد", filterCancelled: "ملغى",
       colDate: "التاريخ", colTime: "الوقت", colLocation: "المكان", colChild: "الطفل", colParent: "ولي الأمر", colPhone: "هاتف", colEmail: "بريد", colLang: "لغة", colStatus: "الحالة", colActions: "إجراءات",
       confirm: "تأكيد", cancel: "إلغاء", delete: "حذف", confirmed: "تم التأكيد", cancelled: "تم الإلغاء", noAppointments: "لا توجد مواعيد",
