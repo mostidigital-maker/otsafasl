@@ -134,9 +134,9 @@ const dict = {
         { title: "תוכניות אישיות", description: "תוכנית ייחודית.", features: ["הערכה", "מטרות", "מעקב"] },
       ],
     },
-    insurance: { tag: "ביטוח בריאות", titleStart: "אנו עובדים בשיתוף עם", titleHighlight: "כללית", desc: "מוכרים על ידי קופת חולים כללית.",
-      coverage: ["כיסוי מלא לילדים עד גיל 18", "ללא תשלום נוסף", "הפניה מרופא ילדים", "מספר טיפולים לפי המלצה"],
-      otherInsuranceTitle: "יש לכם ביטוח אחר?", otherInsuranceDesc: "צרו קשר לבירור.", coverageBadge: "כיסוי מוכר", ageRange: "0-18", ageGroupLabel: "טווח גילאים", certifiedLabel: "מוכר רשמית",
+    insurance: { tag: "ביטוח בריאות", titleStart: "אנו עובדים עם", titleHighlight: "כללית מושלם", desc: "הקליניקה מוכרת על ידי כללית מושלם, ועובדת גם באופן פרטי.",
+      coverage: ["הנחה דרך כללית מושלם לילדים עד גיל 18", "המבוטח משלם רק דמי הרשמה (כ-37 ₪, נתון לשינוי)", "הפניה מרופא ילדים", "מספר טיפולים לפי המלצה"],
+      otherInsuranceTitle: "אין לכם כללית מושלם?", otherInsuranceDesc: "אנו עובדים גם באופן פרטי — צרו קשר לפרטים.", coverageBadge: "כיסוי מוכר", ageRange: "0-18", ageGroupLabel: "טווח גילאים", certifiedLabel: "מוכר רשמית",
     },
     booking: {
       tag: "קביעת תור", title: "קבע את התור שלך", desc: "בחר מיקום, תאריך ושעה שמתאימים לך",
