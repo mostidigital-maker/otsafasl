@@ -266,7 +266,8 @@ const dict = {
     },
     admin: {
       title: "Admin Dashboard", signOut: "Sign out",
-      tabs: { appointments: "Appointments", workingHours: "Working hours", blocked: "Blocked times", manual: "Add manual" },
+      tabs: { appointments: "Appointments", calendar: "Calendar", workingHours: "Working hours", blocked: "Blocked times", manual: "Add manual" },
+      calendar: { month: "Month", week: "Week", today: "Today", prev: "Prev", next: "Next", noOnDay: "No appointments", allLocations: "All locations", monthsShort: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"] },
       filterAll: "All", filterPending: "Pending", filterConfirmed: "Confirmed", filterCancelled: "Cancelled",
       colDate: "Date", colTime: "Time", colLocation: "Location", colChild: "Child", colParent: "Parent", colPhone: "Phone", colEmail: "Email", colLang: "Lang", colStatus: "Status", colActions: "Actions",
       confirm: "Confirm", cancel: "Cancel", delete: "Delete", confirmed: "Confirmed", cancelled: "Cancelled", noAppointments: "No appointments",
