@@ -223,9 +223,9 @@ const dict = {
         { title: "Personalized programs", description: "Unique plan per child.", features: ["Assessment", "Goals", "Follow-up"] },
       ],
     },
-    insurance: { tag: "Health Insurance", titleStart: "Partnered with", titleHighlight: "Clalit (כללית)", desc: "Approved by Clalit health fund.",
-      coverage: ["Full coverage for children up to 18", "No additional payments (per insurance)", "Pediatrician referral", "Sessions per therapist's recommendation"],
-      otherInsuranceTitle: "Another insurer?", otherInsuranceDesc: "Contact us about coverage.", coverageBadge: "Approved coverage", ageRange: "Children 0-18", ageGroupLabel: "Age group", certifiedLabel: "Officially certified",
+    insurance: { tag: "Health Insurance", titleStart: "Working with", titleHighlight: "Clalit Mushlam (כללית מושלם)", desc: "Recognized by Clalit Mushlam, and also available privately.",
+      coverage: ["Clalit Mushlam discount for children up to 18", "Members pay only the registration fee (~37 NIS, subject to change)", "Pediatrician referral", "Sessions per therapist's recommendation"],
+      otherInsuranceTitle: "Not on Clalit Mushlam?", otherInsuranceDesc: "We also work privately — contact us for details.", coverageBadge: "Approved coverage", ageRange: "Children 0-18", ageGroupLabel: "Age group", certifiedLabel: "Officially certified",
     },
     booking: {
       tag: "Book an Appointment", title: "Book your appointment", desc: "Pick a location, date and time",
