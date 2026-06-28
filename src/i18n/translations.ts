@@ -229,8 +229,8 @@ const dict = {
         { title: "Personalized programs", description: "Unique plan per child.", features: ["Assessment", "Goals", "Follow-up"] },
       ],
     },
-    insurance: { tag: "Health Insurance", titleStart: "Working with", titleHighlight: "Clalit Mushlam (כללית מושלם)", desc: "Recognized by Clalit Mushlam, and also available privately.",
-      coverage: ["Clalit Mushlam discount for children up to 18", "Members pay only the registration fee (~37 NIS, subject to change)", "Pediatrician referral", "Sessions per therapist's recommendation"],
+    insurance: { tag: "Health Insurance", titleStart: "Treatment under agreement with", titleHighlight: "Clalit Mushlam", desc: "Children insured with Clalit Mushlam may be eligible for occupational therapy treatments for a self-participation fee only, according to Clalit's eligibility terms.",
+      coverage: ["Number of sessions according to eligibility and professional recommendation", "Referral from a pediatrician is required"],
       otherInsuranceTitle: "Not on Clalit Mushlam?", otherInsuranceDesc: "We also work privately — contact us for details.", coverageBadge: "Approved coverage", ageRange: "Children 0-18", ageGroupLabel: "Age group", certifiedLabel: "Officially certified",
     },
     booking: {
