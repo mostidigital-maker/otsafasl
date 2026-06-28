@@ -241,6 +241,8 @@ const dict = {
       pickDate: "Choose a date in the next month",
       pickTime: "Available times",
       noSlots: "No available slots on this day",
+      noAvailability: "No appointments are available at this location in the near future. Please choose another location or contact us.",
+      changeLocation: "Choose another location",
       loadingSlots: "Loading times...",
       childName: "Child's name", childNamePh: "Enter child's name",
       childAge: "Child's age", childAgePh: "e.g., 5 years",
