@@ -45,8 +45,8 @@ const dict = {
         { title: "برامج علاجية شخصية", description: "برنامج علاجي خاص لكل طفل.", features: ["تقييم شامل", "أهداف محددة", "متابعة مستمرة"] },
       ],
     },
-    insurance: { tag: "التأمين الصحي", titleStart: "نعمل مع", titleHighlight: "كلاليت مشلام (כללית מושלם)", desc: "العيادة معتمدة من كلاليت مشلام، ونعمل أيضًا بشكل خاص.",
-      coverage: ["خصم من كلاليت مشلام للأطفال حتى سن 18", "يدفع المؤمَّن فقط رسوم التسجيل (حوالي 37 ش.ج، قابل للتغيير)", "إحالة من طبيب الأطفال", "عدد جلسات حسب توصية المعالج"],
+    insurance: { tag: "التأمين الصحي", titleStart: "العلاج ضمن اتفاقية مع", titleHighlight: "كلاليت مشلام", desc: "الأطفال المؤمنون في كلاليت مشلام قد يكونون مؤهلين للحصول على علاجات علاج وظيفي مقابل مشاركة ذاتية فقط، وفقًا لشروط الاستحقاق الخاصة بكلاليت.",
+      coverage: ["عدد الجلسات حسب الاستحقاق والتوصية المهنية.", "الإحالة من طبيب أطفال مطلوبة."],
       otherInsuranceTitle: "ليس لديك كلاليت مشلام؟", otherInsuranceDesc: "نعمل أيضًا بشكل خاص — تواصل معنا للتفاصيل.", coverageBadge: "تغطية معتمدة", ageRange: "للأطفال 0-18 سنة", ageGroupLabel: "الفئة العمرية", certifiedLabel: "معتمد رسميًا",
     },
     booking: {
@@ -137,8 +137,8 @@ const dict = {
         { title: "תוכניות אישיות", description: "תוכנית ייחודית.", features: ["הערכה", "מטרות", "מעקב"] },
       ],
     },
-    insurance: { tag: "ביטוח בריאות", titleStart: "אנו עובדים עם", titleHighlight: "כללית מושלם", desc: "הקליניקה מוכרת על ידי כללית מושלם, ועובדת גם באופן פרטי.",
-      coverage: ["הנחה דרך כללית מושלם לילדים עד גיל 18", "המבוטח משלם רק דמי הרשמה (כ-37 ₪, נתון לשינוי)", "הפניה מרופא ילדים", "מספר טיפולים לפי המלצה"],
+    insurance: { tag: "ביטוח בריאות", titleStart: "טיפול במסגרת הסכם עם", titleHighlight: "כללית מושלם", desc: "ילדים המבוטחים בכללית מושלם עשויים להיות זכאים לטיפולי ריפוי בעיסוק תמורת השתתפות עצמית בלבד, בהתאם לתנאי הזכאיות של כללית.",
+      coverage: ["מספר טיפולים בהתאם לזכאיות והמלצה מקצועית", "נדרשת הפניה מרופא ילדים"],
       otherInsuranceTitle: "אין לכם כללית מושלם?", otherInsuranceDesc: "אנו עובדים גם באופן פרטי — צרו קשר לפרטים.", coverageBadge: "כיסוי מוכר", ageRange: "0-18", ageGroupLabel: "טווח גילאים", certifiedLabel: "מוכר רשמית",
     },
     booking: {
@@ -229,8 +229,8 @@ const dict = {
         { title: "Personalized programs", description: "Unique plan per child.", features: ["Assessment", "Goals", "Follow-up"] },
       ],
     },
-    insurance: { tag: "Health Insurance", titleStart: "Working with", titleHighlight: "Clalit Mushlam (כללית מושלם)", desc: "Recognized by Clalit Mushlam, and also available privately.",
-      coverage: ["Clalit Mushlam discount for children up to 18", "Members pay only the registration fee (~37 NIS, subject to change)", "Pediatrician referral", "Sessions per therapist's recommendation"],
+    insurance: { tag: "Health Insurance", titleStart: "Treatment under agreement with", titleHighlight: "Clalit Mushlam", desc: "Children insured with Clalit Mushlam may be eligible for occupational therapy treatments for a self-participation fee only, according to Clalit's eligibility terms.",
+      coverage: ["Number of sessions according to eligibility and professional recommendation", "Referral from a pediatrician is required"],
       otherInsuranceTitle: "Not on Clalit Mushlam?", otherInsuranceDesc: "We also work privately — contact us for details.", coverageBadge: "Approved coverage", ageRange: "Children 0-18", ageGroupLabel: "Age group", certifiedLabel: "Officially certified",
     },
     booking: {
