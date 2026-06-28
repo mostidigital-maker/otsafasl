@@ -197,17 +197,29 @@ export const BookingSection = () => {
           {step === 2 && (
             <div>
               <h3 className="text-lg font-semibold mb-4">{t.booking.pickDate}</h3>
-              <div className="flex justify-center">
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={(d) => { if (d) { setSelectedDate(d); setSelectedSlot(null); setStep(3); } }}
-                  fromDate={minDate}
-                  toDate={maxDate}
-                  disabled={(d) => !availableDates.has(d.toDateString())}
-                  className="pointer-events-auto rounded-xl border border-border"
-                />
-              </div>
+              {loading ? (
+                <p className="text-muted-foreground text-center py-8">{t.booking.loadingSlots}</p>
+              ) : availableDates.size === 0 ? (
+                <div className="text-center py-8 px-4 bg-muted/40 rounded-2xl border border-border">
+                  <CalIcon className="w-12 h-12 text-muted-foreground mx-auto mb-3 opacity-60" />
+                  <p className="text-base text-foreground font-medium mb-4">{t.booking.noAvailability}</p>
+                  <Button variant="outline" onClick={() => { setLocationId(null); setStep(1); }}>
+                    {t.booking.changeLocation}
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex justify-center">
+                  <Calendar
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={(d) => { if (d) { setSelectedDate(d); setSelectedSlot(null); setStep(3); } }}
+                    fromDate={minDate}
+                    toDate={maxDate}
+                    disabled={(d) => !availableDates.has(d.toDateString())}
+                    className="pointer-events-auto rounded-xl border border-border"
+                  />
+                </div>
+              )}
               <div className="flex justify-between mt-6"><Back to={1} /><div /></div>
             </div>
           )}
