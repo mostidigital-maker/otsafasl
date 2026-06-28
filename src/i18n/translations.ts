@@ -149,6 +149,8 @@ const dict = {
       pickDate: "בחר תאריך מהחודש הקרוב",
       pickTime: "שעות פנויות",
       noSlots: "אין מועדים פנויים ביום זה",
+      noAvailability: "אין כרגע תורים פנויים בזמן הקרוב במיקום זה. אנא בחר מיקום אחר או צור איתנו קשר.",
+      changeLocation: "בחירת מיקום אחר",
       loadingSlots: "טוען מועדים...",
       childName: "שם הילד", childNamePh: "הזן את שם הילד",
       childAge: "גיל הילד", childAgePh: "לדוגמה: 5 שנים",
