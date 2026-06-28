@@ -14,7 +14,17 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const [lang, setLangState] = useState<Language>(() => {
     if (typeof window === "undefined") return "ar";
     const stored = localStorage.getItem("lang") as Language | null;
-    return stored && ["ar", "he", "en"].includes(stored) ? stored : "ar";
+    if (stored && ["ar", "he", "en"].includes(stored)) return stored;
+    const browserLangs = [
+      ...(navigator.languages ?? []),
+      navigator.language,
+    ].filter(Boolean);
+    for (const l of browserLangs) {
+      const code = l.toLowerCase().split("-")[0];
+      if (code === "ar" || code === "he" || code === "iw") return code === "iw" ? "he" : (code as Language);
+      if (code === "en") return "en";
+    }
+    return "ar";
   });
 
   const dir = languages.find((l) => l.code === lang)?.dir ?? "rtl";
