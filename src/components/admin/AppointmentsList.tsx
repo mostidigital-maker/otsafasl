@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Check, X, Trash2 } from "lucide-react";
+import { Check, X, Trash2, MessageCircle } from "lucide-react";
 
 interface Appointment {
   id: string;
