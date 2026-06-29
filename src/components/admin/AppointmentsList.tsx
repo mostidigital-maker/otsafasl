@@ -160,6 +160,16 @@ export const AppointmentsList = () => {
                         <Button size="icon" variant="ghost" onClick={() => updateStatus(r.id, "cancelled")} title={t.admin.cancel}><X className="w-4 h-4" /></Button>
                       )}
                       <Button size="icon" variant="ghost" onClick={() => remove(r.id)} title={t.admin.delete}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+                      {r.status === "confirmed" && (() => {
+                        const loc = locs[r.location_id];
+                        const locNameStr = loc ? (loc[`name_${r.language}` as const] || loc.name_ar) : "";
+                        const msg = buildApprovalMessage(r.language, r.parent_name, r.child_name, r.slot_at, locNameStr);
+                        return (
+                          <Button size="icon" variant="ghost" onClick={() => window.open(`https://wa.me/${toWaPhone(r.phone)}?text=${encodeURIComponent(msg)}`, "_blank")} title={t.booking.sendWhatsapp}>
+                            <MessageCircle className="w-4 h-4 text-[#25D366]" />
+                          </Button>
+                        );
+                      })()}
                     </div>
                   </TableCell>
                 </TableRow>
