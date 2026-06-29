@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Check, X, Trash2 } from "lucide-react";
+import { Check, X, Trash2, MessageCircle } from "lucide-react";
 
 interface Appointment {
   id: string;
@@ -23,6 +23,35 @@ interface Appointment {
   created_by_admin: boolean;
 }
 interface Loc { id: string; name_ar: string; name_he: string; name_en: string }
+
+const toWaPhone = (raw: string): string => {
+  const digits = raw.replace(/\D/g, "");
+  if (digits.startsWith("0")) return "972" + digits.slice(1);
+  return digits.startsWith("972") ? digits : "972" + digits;
+};
+
+const buildApprovalMessage = (
+  language: "ar" | "he" | "en",
+  parentName: string,
+  childName: string,
+  slotAt: string,
+  locName: string
+): string => {
+  const d = new Date(slotAt);
+  const dateStr = d.toLocaleDateString(
+    language === "en" ? "en-GB" : language === "he" ? "he-IL" : "ar-EG",
+    { weekday: "long", year: "numeric", month: "long", day: "numeric" }
+  );
+  const timeStr = d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+  if (language === "ar") {
+    return `مرحباً ${parentName}، تم تأكيد موعد طفلك ${childName}. التاريخ: ${dateStr}، الساعة: ${timeStr}، المكان: ${locName}. نراكم قريباً!`;
+  } else if (language === "he") {
+    return `שלום ${parentName}, התור של ${childName} אושר. תאריך: ${dateStr}, שעה: ${timeStr}, מיקום: ${locName}. נתראה בקרוב!`;
+  } else {
+    return `Hello ${parentName}, the appointment for ${childName} is confirmed. Date: ${dateStr}, Time: ${timeStr}, Location: ${locName}. See you soon!`;
+  }
+};
 
 export const AppointmentsList = () => {
   const { t, lang } = useLanguage();
@@ -43,11 +72,18 @@ export const AppointmentsList = () => {
   useEffect(() => { load(); }, []);
 
   const updateStatus = async (id: string, status: "confirmed" | "cancelled") => {
+    const appt = rows.find((r) => r.id === id);
     const { error } = await supabase.from("appointments").update({ status }).eq("id", id);
     if (error) return toast({ title: "Error", description: error.message, variant: "destructive" });
     toast({ title: status === "confirmed" ? t.admin.confirmed : t.admin.cancelled });
     if (status === "confirmed") {
       supabase.functions.invoke("notify-appointment", { body: { appointment_id: id, kind: "confirmed" } }).catch(() => {});
+      if (appt) {
+        const loc = locs[appt.location_id];
+        const locNameStr = loc ? (loc[`name_${appt.language}` as const] || loc.name_ar) : "";
+        const msg = buildApprovalMessage(appt.language, appt.parent_name, appt.child_name, appt.slot_at, locNameStr);
+        window.open(`https://wa.me/${toWaPhone(appt.phone)}?text=${encodeURIComponent(msg)}`, "_blank");
+      }
     }
     load();
   };
@@ -124,6 +160,16 @@ export const AppointmentsList = () => {
                         <Button size="icon" variant="ghost" onClick={() => updateStatus(r.id, "cancelled")} title={t.admin.cancel}><X className="w-4 h-4" /></Button>
                       )}
                       <Button size="icon" variant="ghost" onClick={() => remove(r.id)} title={t.admin.delete}><Trash2 className="w-4 h-4 text-destructive" /></Button>
+                      {r.status === "confirmed" && (() => {
+                        const loc = locs[r.location_id];
+                        const locNameStr = loc ? (loc[`name_${r.language}` as const] || loc.name_ar) : "";
+                        const msg = buildApprovalMessage(r.language, r.parent_name, r.child_name, r.slot_at, locNameStr);
+                        return (
+                          <Button size="icon" variant="ghost" onClick={() => window.open(`https://wa.me/${toWaPhone(r.phone)}?text=${encodeURIComponent(msg)}`, "_blank")} title={t.booking.sendWhatsapp}>
+                            <MessageCircle className="w-4 h-4 text-[#25D366]" />
+                          </Button>
+                        );
+                      })()}
                     </div>
                   </TableCell>
                 </TableRow>
