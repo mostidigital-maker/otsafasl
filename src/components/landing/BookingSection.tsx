@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
-import { CheckCircle, MapPin, Calendar as CalIcon, Clock, ChevronRight, ChevronLeft, Send } from "lucide-react";
+import { CheckCircle, MapPin, Calendar as CalIcon, Clock, ChevronRight, ChevronLeft, Send, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
