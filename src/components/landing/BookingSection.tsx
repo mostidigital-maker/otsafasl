@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
-import { CheckCircle, MapPin, Calendar as CalIcon, Clock, ChevronRight, ChevronLeft, Send } from "lucide-react";
+import { CheckCircle, MapPin, Calendar as CalIcon, Clock, ChevronRight, ChevronLeft, Send, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -103,6 +103,22 @@ export const BookingSection = () => {
   };
 
   if (done) {
+    const dateStr = selectedDate
+      ? selectedDate.toLocaleDateString(lang === "en" ? "en-GB" : lang === "he" ? "he-IL" : "ar-EG", {
+          weekday: "long", year: "numeric", month: "long", day: "numeric"
+        })
+      : "";
+    const timeStr = selectedSlot?.label ?? "";
+    let waMessage = "";
+    if (lang === "ar") {
+      waMessage = `مرحباً، قمت بحجز موعد بتاريخ ${dateStr} في الساعة ${timeStr} وأنتظر التأكيد.`;
+    } else if (lang === "he") {
+      waMessage = `שלום, קבעתי תור בתאריך ${dateStr} בשעה ${timeStr} ומחכה לאישור.`;
+    } else {
+      waMessage = `Hello, I booked an appointment on ${dateStr} at ${timeStr} and I'm waiting for approval.`;
+    }
+    const waUrl = `https://wa.me/972505772680?text=${encodeURIComponent(waMessage)}`;
+
     return (
       <section id="booking" className="py-20 md:py-32 bg-card">
         <div className="container mx-auto px-4">
@@ -112,7 +128,14 @@ export const BookingSection = () => {
             </div>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">{t.booking.thanksTitle}</h2>
             <p className="text-lg text-muted-foreground mb-8">{t.booking.thanksDesc}</p>
-            <Button variant="outline" onClick={reset}>{t.booking.bookAnother}</Button>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Button variant="outline" onClick={reset}>{t.booking.bookAnother}</Button>
+              {selectedDate && selectedSlot && (
+                <Button className="gap-2 bg-[#25D366] hover:bg-[#128C7E] text-white border-none" onClick={() => window.open(waUrl, "_blank")}>
+                  <MessageCircle className="w-4 h-4" /> {t.booking.sendWhatsapp}
+                </Button>
+              )}
+            </div>
           </motion.div>
         </div>
       </section>
