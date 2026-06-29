@@ -13,7 +13,7 @@ export const HeroSection = () => {
 
   const openWhatsApp = () => {
     const msg = encodeURIComponent(t.common.whatsappMessage);
-    window.open(`https://wa.me/972501234567?text=${msg}`, "_blank");
+    window.open(`https://wa.me/972505772680?text=${msg}`, "_blank");
   };
 
   return (
