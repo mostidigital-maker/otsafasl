@@ -3,7 +3,7 @@ import {
   addDays, addMonths, addWeeks, endOfMonth, endOfWeek, format,
   isSameDay, isSameMonth, isToday, startOfMonth, startOfWeek, subMonths, subWeeks,
 } from "date-fns";
-import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
