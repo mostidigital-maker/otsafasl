@@ -72,11 +72,18 @@ export const AppointmentsList = () => {
   useEffect(() => { load(); }, []);
 
   const updateStatus = async (id: string, status: "confirmed" | "cancelled") => {
+    const appt = rows.find((r) => r.id === id);
     const { error } = await supabase.from("appointments").update({ status }).eq("id", id);
     if (error) return toast({ title: "Error", description: error.message, variant: "destructive" });
     toast({ title: status === "confirmed" ? t.admin.confirmed : t.admin.cancelled });
     if (status === "confirmed") {
       supabase.functions.invoke("notify-appointment", { body: { appointment_id: id, kind: "confirmed" } }).catch(() => {});
+      if (appt) {
+        const loc = locs[appt.location_id];
+        const locNameStr = loc ? (loc[`name_${appt.language}` as const] || loc.name_ar) : "";
+        const msg = buildApprovalMessage(appt.language, appt.parent_name, appt.child_name, appt.slot_at, locNameStr);
+        window.open(`https://wa.me/${toWaPhone(appt.phone)}?text=${encodeURIComponent(msg)}`, "_blank");
+      }
     }
     load();
   };
