@@ -24,6 +24,35 @@ interface Appointment {
 }
 interface Loc { id: string; name_ar: string; name_he: string; name_en: string }
 
+const toWaPhone = (raw: string): string => {
+  const digits = raw.replace(/\D/g, "");
+  if (digits.startsWith("0")) return "972" + digits.slice(1);
+  return digits.startsWith("972") ? digits : "972" + digits;
+};
+
+const buildApprovalMessage = (
+  language: "ar" | "he" | "en",
+  parentName: string,
+  childName: string,
+  slotAt: string,
+  locName: string
+): string => {
+  const d = new Date(slotAt);
+  const dateStr = d.toLocaleDateString(
+    language === "en" ? "en-GB" : language === "he" ? "he-IL" : "ar-EG",
+    { weekday: "long", year: "numeric", month: "long", day: "numeric" }
+  );
+  const timeStr = d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+  if (language === "ar") {
+    return `مرحباً ${parentName}، تم تأكيد موعد طفلك ${childName}. التاريخ: ${dateStr}، الساعة: ${timeStr}، المكان: ${locName}. نراكم قريباً!`;
+  } else if (language === "he") {
+    return `שלום ${parentName}, התור של ${childName} אושר. תאריך: ${dateStr}, שעה: ${timeStr}, מיקום: ${locName}. נתראה בקרוב!`;
+  } else {
+    return `Hello ${parentName}, the appointment for ${childName} is confirmed. Date: ${dateStr}, Time: ${timeStr}, Location: ${locName}. See you soon!`;
+  }
+};
+
 export const AppointmentsList = () => {
   const { t, lang } = useLanguage();
   const { toast } = useToast();
