@@ -123,6 +123,7 @@ export const AppointmentsList = () => {
               <TableHead>{t.admin.colTime}</TableHead>
               <TableHead>{t.admin.colLocation}</TableHead>
               <TableHead>{t.admin.colChild}</TableHead>
+              <TableHead>{t.admin.colNationalId}</TableHead>
               <TableHead>{t.admin.colParent}</TableHead>
               <TableHead>{t.admin.colPhone}</TableHead>
               <TableHead>{t.admin.colEmail}</TableHead>
