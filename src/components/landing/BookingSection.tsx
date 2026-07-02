@@ -34,7 +34,7 @@ export const BookingSection = () => {
   const [selectedSlot, setSelectedSlot] = useState<SlotOption | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
-  const [form, setForm] = useState({ childName: "", childAge: "", parentName: "", phone: "", email: "" });
+  const [form, setForm] = useState({ childName: "", childAge: "", childNationalId: "", parentName: "", phone: "", email: "" });
 
   useEffect(() => {
     supabase.from("locations").select("*").order("sort_order").then(({ data }) => {
