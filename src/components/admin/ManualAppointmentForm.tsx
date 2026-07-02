@@ -37,9 +37,10 @@ export const ManualAppointmentForm = () => {
       slot_at: new Date(form.slot_at).toISOString(),
       child_name: form.child_name.trim(),
       child_age: form.child_age || null,
+      child_national_id: form.child_national_id.trim() || null,
       parent_name: form.parent_name.trim(),
       phone: form.phone.trim(),
-      email: form.email.trim() || "noemail@local",
+      email: form.email.trim() || null,
       language: form.language,
       notes: form.notes || null,
       status: "confirmed",
@@ -48,7 +49,7 @@ export const ManualAppointmentForm = () => {
     setSubmitting(false);
     if (error) return toast({ title: "Error", description: error.message, variant: "destructive" });
     toast({ title: t.admin.whSaved });
-    setForm({ ...form, slot_at: "", child_name: "", child_age: "", parent_name: "", phone: "", email: "", notes: "" });
+    setForm({ ...form, slot_at: "", child_name: "", child_age: "", child_national_id: "", parent_name: "", phone: "", email: "", notes: "" });
   };
 
   return (
