@@ -306,6 +306,18 @@ export const BookingSection = () => {
                   <Label>{t.booking.childAge}</Label>
                   <Input value={form.childAge} onChange={(e) => setForm({ ...form, childAge: e.target.value })} placeholder={t.booking.childAgePh} maxLength={20} />
                 </div>
+                <div className="space-y-2 md:col-span-2">
+                  <Label>{t.booking.childNationalId} *</Label>
+                  <Input
+                    value={form.childNationalId}
+                    onChange={(e) => setForm({ ...form, childNationalId: e.target.value.replace(/\D/g, "") })}
+                    placeholder={t.booking.childNationalIdPh}
+                    inputMode="numeric"
+                    maxLength={9}
+                    dir="ltr"
+                    required
+                  />
+                </div>
                 <div className="space-y-2">
                   <Label>{t.booking.parentName} *</Label>
                   <Input value={form.parentName} onChange={(e) => setForm({ ...form, parentName: e.target.value })} placeholder={t.booking.parentNamePh} maxLength={100} required />
@@ -315,8 +327,8 @@ export const BookingSection = () => {
                   <Input type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder={t.booking.phonePh} maxLength={20} dir="ltr" required />
                 </div>
                 <div className="space-y-2 md:col-span-2">
-                  <Label>{t.booking.email} *</Label>
-                  <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder={t.booking.emailPh} maxLength={255} dir="ltr" required />
+                  <Label>{t.booking.email}</Label>
+                  <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder={t.booking.emailPh} maxLength={255} dir="ltr" />
                 </div>
               </div>
 
