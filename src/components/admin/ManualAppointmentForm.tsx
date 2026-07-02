@@ -14,7 +14,7 @@ export const ManualAppointmentForm = () => {
   const { toast } = useToast();
   const [locs, setLocs] = useState<Loc[]>([]);
   const [form, setForm] = useState({
-    location_id: "", slot_at: "", child_name: "", child_age: "", parent_name: "",
+    location_id: "", slot_at: "", child_name: "", child_age: "", child_national_id: "", parent_name: "",
     phone: "", email: "", language: "ar" as "ar" | "he" | "en", notes: "",
   });
   const [submitting, setSubmitting] = useState(false);
