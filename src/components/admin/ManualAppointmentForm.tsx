@@ -14,7 +14,7 @@ export const ManualAppointmentForm = () => {
   const { toast } = useToast();
   const [locs, setLocs] = useState<Loc[]>([]);
   const [form, setForm] = useState({
-    location_id: "", slot_at: "", child_name: "", child_age: "", parent_name: "",
+    location_id: "", slot_at: "", child_name: "", child_age: "", child_national_id: "", parent_name: "",
     phone: "", email: "", language: "ar" as "ar" | "he" | "en", notes: "",
   });
   const [submitting, setSubmitting] = useState(false);
@@ -37,9 +37,10 @@ export const ManualAppointmentForm = () => {
       slot_at: new Date(form.slot_at).toISOString(),
       child_name: form.child_name.trim(),
       child_age: form.child_age || null,
+      child_national_id: form.child_national_id.trim() || null,
       parent_name: form.parent_name.trim(),
       phone: form.phone.trim(),
-      email: form.email.trim() || "noemail@local",
+      email: form.email.trim() || null,
       language: form.language,
       notes: form.notes || null,
       status: "confirmed",
@@ -48,7 +49,7 @@ export const ManualAppointmentForm = () => {
     setSubmitting(false);
     if (error) return toast({ title: "Error", description: error.message, variant: "destructive" });
     toast({ title: t.admin.whSaved });
-    setForm({ ...form, slot_at: "", child_name: "", child_age: "", parent_name: "", phone: "", email: "", notes: "" });
+    setForm({ ...form, slot_at: "", child_name: "", child_age: "", child_national_id: "", parent_name: "", phone: "", email: "", notes: "" });
   };
 
   return (
@@ -68,6 +69,7 @@ export const ManualAppointmentForm = () => {
         </div>
         <div className="space-y-2"><Label>{t.booking.childName}</Label><Input value={form.child_name} onChange={(e) => setForm({ ...form, child_name: e.target.value })} maxLength={100} required /></div>
         <div className="space-y-2"><Label>{t.booking.childAge}</Label><Input value={form.child_age} onChange={(e) => setForm({ ...form, child_age: e.target.value })} maxLength={20} /></div>
+        <div className="space-y-2"><Label>{t.booking.childNationalId}</Label><Input value={form.child_national_id} onChange={(e) => setForm({ ...form, child_national_id: e.target.value.replace(/\D/g, "") })} maxLength={9} dir="ltr" placeholder={t.booking.childNationalIdPh} /></div>
         <div className="space-y-2"><Label>{t.booking.parentName}</Label><Input value={form.parent_name} onChange={(e) => setForm({ ...form, parent_name: e.target.value })} maxLength={100} required /></div>
         <div className="space-y-2"><Label>{t.booking.phone}</Label><Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} maxLength={20} dir="ltr" required /></div>
         <div className="space-y-2"><Label>{t.booking.email}</Label><Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} dir="ltr" maxLength={255} /></div>

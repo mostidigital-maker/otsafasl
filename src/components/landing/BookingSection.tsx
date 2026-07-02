@@ -34,7 +34,7 @@ export const BookingSection = () => {
   const [selectedSlot, setSelectedSlot] = useState<SlotOption | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
-  const [form, setForm] = useState({ childName: "", childAge: "", parentName: "", phone: "", email: "" });
+  const [form, setForm] = useState({ childName: "", childAge: "", childNationalId: "", parentName: "", phone: "", email: "" });
 
   useEffect(() => {
     supabase.from("locations").select("*").order("sort_order").then(({ data }) => {
@@ -57,20 +57,24 @@ export const BookingSection = () => {
 
   const reset = () => {
     setStep(1); setLocationId(null); setSelectedDate(undefined); setSelectedSlot(null);
-    setForm({ childName: "", childAge: "", parentName: "", phone: "", email: "" });
+    setForm({ childName: "", childAge: "", childNationalId: "", parentName: "", phone: "", email: "" });
     setDone(false);
   };
 
   const submit = async () => {
-    if (!form.childName || !form.parentName || !form.phone || !form.email || !selectedSlot || !locationId) {
+    if (!form.childName || !form.childNationalId || !form.parentName || !form.phone || !selectedSlot || !locationId) {
       toast({ title: t.booking.errorTitle, description: t.booking.errorRequired, variant: "destructive" });
+      return;
+    }
+    if (!/^\d{9}$/.test(form.childNationalId.trim())) {
+      toast({ title: t.booking.errorNationalIdTitle, description: t.booking.errorNationalIdDesc, variant: "destructive" });
       return;
     }
     if (!/^[\d\s\-+()]{9,15}$/.test(form.phone)) {
       toast({ title: t.booking.errorPhoneTitle, description: t.booking.errorPhoneDesc, variant: "destructive" });
       return;
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+    if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
       toast({ title: t.booking.errorEmailTitle, description: t.booking.errorEmailDesc, variant: "destructive" });
       return;
     }
@@ -80,9 +84,10 @@ export const BookingSection = () => {
       slot_at: selectedSlot.iso,
       child_name: form.childName.trim(),
       child_age: form.childAge.trim() || null,
+      child_national_id: form.childNationalId.trim(),
       parent_name: form.parentName.trim(),
       phone: form.phone.trim(),
-      email: form.email.trim(),
+      email: form.email.trim() || null,
       language: lang,
     });
     setSubmitting(false);
@@ -301,6 +306,18 @@ export const BookingSection = () => {
                   <Label>{t.booking.childAge}</Label>
                   <Input value={form.childAge} onChange={(e) => setForm({ ...form, childAge: e.target.value })} placeholder={t.booking.childAgePh} maxLength={20} />
                 </div>
+                <div className="space-y-2 md:col-span-2">
+                  <Label>{t.booking.childNationalId} *</Label>
+                  <Input
+                    value={form.childNationalId}
+                    onChange={(e) => setForm({ ...form, childNationalId: e.target.value.replace(/\D/g, "") })}
+                    placeholder={t.booking.childNationalIdPh}
+                    inputMode="numeric"
+                    maxLength={9}
+                    dir="ltr"
+                    required
+                  />
+                </div>
                 <div className="space-y-2">
                   <Label>{t.booking.parentName} *</Label>
                   <Input value={form.parentName} onChange={(e) => setForm({ ...form, parentName: e.target.value })} placeholder={t.booking.parentNamePh} maxLength={100} required />
@@ -310,8 +327,8 @@ export const BookingSection = () => {
                   <Input type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder={t.booking.phonePh} maxLength={20} dir="ltr" required />
                 </div>
                 <div className="space-y-2 md:col-span-2">
-                  <Label>{t.booking.email} *</Label>
-                  <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder={t.booking.emailPh} maxLength={255} dir="ltr" required />
+                  <Label>{t.booking.email}</Label>
+                  <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder={t.booking.emailPh} maxLength={255} dir="ltr" />
                 </div>
               </div>
 

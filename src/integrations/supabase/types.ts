@@ -18,10 +18,11 @@ export type Database = {
         Row: {
           child_age: string | null
           child_name: string
+          child_national_id: string | null
           created_at: string
           created_by_admin: boolean
           duration_minutes: number
-          email: string
+          email: string | null
           id: string
           language: Database["public"]["Enums"]["app_language"]
           location_id: string
@@ -35,10 +36,11 @@ export type Database = {
         Insert: {
           child_age?: string | null
           child_name: string
+          child_national_id?: string | null
           created_at?: string
           created_by_admin?: boolean
           duration_minutes?: number
-          email: string
+          email?: string | null
           id?: string
           language?: Database["public"]["Enums"]["app_language"]
           location_id: string
@@ -52,10 +54,11 @@ export type Database = {
         Update: {
           child_age?: string | null
           child_name?: string
+          child_national_id?: string | null
           created_at?: string
           created_by_admin?: boolean
           duration_minutes?: number
-          email?: string
+          email?: string | null
           id?: string
           language?: Database["public"]["Enums"]["app_language"]
           location_id?: string

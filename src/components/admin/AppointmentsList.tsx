@@ -14,9 +14,10 @@ interface Appointment {
   slot_at: string;
   child_name: string;
   child_age: string | null;
+  child_national_id: string | null;
   parent_name: string;
   phone: string;
-  email: string;
+  email: string | null;
   language: "ar" | "he" | "en";
   status: "pending" | "confirmed" | "cancelled";
   notes: string | null;
@@ -122,6 +123,7 @@ export const AppointmentsList = () => {
               <TableHead>{t.admin.colTime}</TableHead>
               <TableHead>{t.admin.colLocation}</TableHead>
               <TableHead>{t.admin.colChild}</TableHead>
+              <TableHead>{t.admin.colNationalId}</TableHead>
               <TableHead>{t.admin.colParent}</TableHead>
               <TableHead>{t.admin.colPhone}</TableHead>
               <TableHead>{t.admin.colEmail}</TableHead>
@@ -132,7 +134,7 @@ export const AppointmentsList = () => {
           </TableHeader>
           <TableBody>
             {filtered.length === 0 && (
-              <TableRow><TableCell colSpan={10} className="text-center text-muted-foreground py-8">{t.admin.noAppointments}</TableCell></TableRow>
+              <TableRow><TableCell colSpan={11} className="text-center text-muted-foreground py-8">{t.admin.noAppointments}</TableCell></TableRow>
             )}
             {filtered.map((r) => {
               const d = new Date(r.slot_at);
@@ -142,9 +144,10 @@ export const AppointmentsList = () => {
                   <TableCell dir="ltr">{d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</TableCell>
                   <TableCell>{locName(r.location_id)}</TableCell>
                   <TableCell>{r.child_name}{r.child_age ? ` (${r.child_age})` : ""}</TableCell>
+                  <TableCell dir="ltr" className="text-xs">{r.child_national_id || "—"}</TableCell>
                   <TableCell>{r.parent_name}</TableCell>
                   <TableCell dir="ltr">{r.phone}</TableCell>
-                  <TableCell dir="ltr" className="text-xs">{r.email}</TableCell>
+                  <TableCell dir="ltr" className="text-xs">{r.email || "—"}</TableCell>
                   <TableCell className="uppercase text-xs">{r.language}</TableCell>
                   <TableCell>
                     <Badge variant={r.status === "confirmed" ? "default" : r.status === "cancelled" ? "destructive" : "secondary"}>
