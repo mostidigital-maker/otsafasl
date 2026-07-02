@@ -74,7 +74,7 @@ export const BookingSection = () => {
       toast({ title: t.booking.errorPhoneTitle, description: t.booking.errorPhoneDesc, variant: "destructive" });
       return;
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+    if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
       toast({ title: t.booking.errorEmailTitle, description: t.booking.errorEmailDesc, variant: "destructive" });
       return;
     }
@@ -84,9 +84,10 @@ export const BookingSection = () => {
       slot_at: selectedSlot.iso,
       child_name: form.childName.trim(),
       child_age: form.childAge.trim() || null,
+      child_national_id: form.childNationalId.trim(),
       parent_name: form.parentName.trim(),
       phone: form.phone.trim(),
-      email: form.email.trim(),
+      email: form.email.trim() || null,
       language: lang,
     });
     setSubmitting(false);
