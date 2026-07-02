@@ -14,9 +14,10 @@ interface Appointment {
   slot_at: string;
   child_name: string;
   child_age: string | null;
+  child_national_id: string | null;
   parent_name: string;
   phone: string;
-  email: string;
+  email: string | null;
   language: "ar" | "he" | "en";
   status: "pending" | "confirmed" | "cancelled";
   notes: string | null;
