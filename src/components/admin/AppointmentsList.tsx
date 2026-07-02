@@ -147,7 +147,7 @@ export const AppointmentsList = () => {
                   <TableCell dir="ltr" className="text-xs">{r.child_national_id || "—"}</TableCell>
                   <TableCell>{r.parent_name}</TableCell>
                   <TableCell dir="ltr">{r.phone}</TableCell>
-                  <TableCell dir="ltr" className="text-xs">{r.email}</TableCell>
+                  <TableCell dir="ltr" className="text-xs">{r.email || "—"}</TableCell>
                   <TableCell className="uppercase text-xs">{r.language}</TableCell>
                   <TableCell>
                     <Badge variant={r.status === "confirmed" ? "default" : r.status === "cancelled" ? "destructive" : "secondary"}>
