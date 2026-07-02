@@ -57,13 +57,17 @@ export const BookingSection = () => {
 
   const reset = () => {
     setStep(1); setLocationId(null); setSelectedDate(undefined); setSelectedSlot(null);
-    setForm({ childName: "", childAge: "", parentName: "", phone: "", email: "" });
+    setForm({ childName: "", childAge: "", childNationalId: "", parentName: "", phone: "", email: "" });
     setDone(false);
   };
 
   const submit = async () => {
-    if (!form.childName || !form.parentName || !form.phone || !form.email || !selectedSlot || !locationId) {
+    if (!form.childName || !form.childNationalId || !form.parentName || !form.phone || !selectedSlot || !locationId) {
       toast({ title: t.booking.errorTitle, description: t.booking.errorRequired, variant: "destructive" });
+      return;
+    }
+    if (!/^\d{9}$/.test(form.childNationalId.trim())) {
+      toast({ title: t.booking.errorNationalIdTitle, description: t.booking.errorNationalIdDesc, variant: "destructive" });
       return;
     }
     if (!/^[\d\s\-+()]{9,15}$/.test(form.phone)) {
