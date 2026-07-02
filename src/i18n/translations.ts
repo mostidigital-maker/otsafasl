@@ -189,7 +189,7 @@ const dict = {
       tabs: { appointments: "תורים", calendar: "יומן", workingHours: "שעות פעילות", blocked: "שעות חסומות", manual: "הוספה ידנית" },
       calendar: { month: "חודש", week: "שבוע", today: "היום", prev: "הקודם", next: "הבא", noOnDay: "אין תורים", allLocations: "כל המיקומים", monthsShort: ["ינואר","פברואר","מרץ","אפריל","מאי","יוני","יולי","אוגוסט","ספטמבר","אוקטובר","נובמבר","דצמבר"] },
       filterAll: "הכל", filterPending: "ממתין לאישור", filterConfirmed: "מאושר", filterCancelled: "מבוטל",
-      colDate: "תאריך", colTime: "שעה", colLocation: "מיקום", colChild: "ילד", colParent: "הורה", colPhone: "טלפון", colEmail: "אימייל", colLang: "שפה", colStatus: "סטטוס", colActions: "פעולות",
+      colDate: "תאריך", colTime: "שעה", colLocation: "מיקום", colChild: "ילד", colNationalId: "ת.ז", colParent: "הורה", colPhone: "טלפון", colEmail: "אימייל", colLang: "שפה", colStatus: "סטטוס", colActions: "פעולות",
       confirm: "אשר", cancel: "בטל", delete: "מחק", confirmed: "אושר", cancelled: "בוטל", noAppointments: "אין תורים",
       whWeekday: "יום", whOpens: "פתיחה", whCloses: "סגירה", whSlot: "משך תור (דקות)", whAdd: "הוסף שעות", whSaved: "נשמר",
       weekdays: ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"],
