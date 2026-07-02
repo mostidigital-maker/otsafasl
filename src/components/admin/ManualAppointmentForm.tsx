@@ -69,6 +69,7 @@ export const ManualAppointmentForm = () => {
         </div>
         <div className="space-y-2"><Label>{t.booking.childName}</Label><Input value={form.child_name} onChange={(e) => setForm({ ...form, child_name: e.target.value })} maxLength={100} required /></div>
         <div className="space-y-2"><Label>{t.booking.childAge}</Label><Input value={form.child_age} onChange={(e) => setForm({ ...form, child_age: e.target.value })} maxLength={20} /></div>
+        <div className="space-y-2"><Label>{t.booking.childNationalId}</Label><Input value={form.child_national_id} onChange={(e) => setForm({ ...form, child_national_id: e.target.value.replace(/\D/g, "") })} maxLength={9} dir="ltr" placeholder={t.booking.childNationalIdPh} /></div>
         <div className="space-y-2"><Label>{t.booking.parentName}</Label><Input value={form.parent_name} onChange={(e) => setForm({ ...form, parent_name: e.target.value })} maxLength={100} required /></div>
         <div className="space-y-2"><Label>{t.booking.phone}</Label><Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} maxLength={20} dir="ltr" required /></div>
         <div className="space-y-2"><Label>{t.booking.email}</Label><Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} dir="ltr" maxLength={255} /></div>
