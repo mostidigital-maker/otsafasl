@@ -134,7 +134,7 @@ export const AppointmentsList = () => {
           </TableHeader>
           <TableBody>
             {filtered.length === 0 && (
-              <TableRow><TableCell colSpan={10} className="text-center text-muted-foreground py-8">{t.admin.noAppointments}</TableCell></TableRow>
+              <TableRow><TableCell colSpan={11} className="text-center text-muted-foreground py-8">{t.admin.noAppointments}</TableCell></TableRow>
             )}
             {filtered.map((r) => {
               const d = new Date(r.slot_at);
@@ -144,6 +144,7 @@ export const AppointmentsList = () => {
                   <TableCell dir="ltr">{d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</TableCell>
                   <TableCell>{locName(r.location_id)}</TableCell>
                   <TableCell>{r.child_name}{r.child_age ? ` (${r.child_age})` : ""}</TableCell>
+                  <TableCell dir="ltr" className="text-xs">{r.child_national_id || "—"}</TableCell>
                   <TableCell>{r.parent_name}</TableCell>
                   <TableCell dir="ltr">{r.phone}</TableCell>
                   <TableCell dir="ltr" className="text-xs">{r.email}</TableCell>
