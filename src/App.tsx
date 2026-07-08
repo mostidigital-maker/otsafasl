@@ -6,8 +6,13 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
-import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import AdminLayout from "./pages/admin/AdminLayout";
+import DashboardPage from "./pages/admin/DashboardPage";
+import PatientsPage from "./pages/admin/PatientsPage";
+import PatientProfilePage from "./pages/admin/PatientProfilePage";
+import LegacyAdminPage from "./pages/admin/LegacyAdminPage";
+import Placeholder from "./pages/admin/Placeholder";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 
 const queryClient = new QueryClient();
@@ -37,7 +42,18 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
-            <Route path="/admin" element={<Admin />} />
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<DashboardPage />} />
+              <Route path="patients" element={<PatientsPage />} />
+              <Route path="patients/:id" element={<PatientProfilePage />} />
+              <Route path="calendar" element={<LegacyAdminPage />} />
+              <Route path="treatments" element={<Placeholder title="טיפולים" description="תיעוד טיפולים מלא" />} />
+              <Route path="payments" element={<Placeholder title="תשלומים" description="ניהול תשלומים פרטיים וביטוח" />} />
+              <Route path="insurance" element={<Placeholder title="ביטוח" description="דשבורד הגשות ביטוח" />} />
+              <Route path="reminders" element={<Placeholder title="תזכורות מעקב" />} />
+              <Route path="reports" element={<Placeholder title="דוחות" description="הפקת דוחות ו-Excel/PDF" />} />
+              <Route path="settings" element={<Placeholder title="הגדרות" />} />
+            </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
