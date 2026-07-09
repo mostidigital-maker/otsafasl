@@ -12,6 +12,9 @@ import DashboardPage from "./pages/admin/DashboardPage";
 import PatientsPage from "./pages/admin/PatientsPage";
 import PatientProfilePage from "./pages/admin/PatientProfilePage";
 import LegacyAdminPage from "./pages/admin/LegacyAdminPage";
+import RemindersPage from "./pages/admin/RemindersPage";
+import PaymentsPage from "./pages/admin/PaymentsPage";
+import InsurancePage from "./pages/admin/InsurancePage";
 import Placeholder from "./pages/admin/Placeholder";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 
@@ -47,10 +50,10 @@ const App = () => (
               <Route path="patients" element={<PatientsPage />} />
               <Route path="patients/:id" element={<PatientProfilePage />} />
               <Route path="calendar" element={<LegacyAdminPage />} />
-              <Route path="treatments" element={<Placeholder title="טיפולים" description="תיעוד טיפולים מלא" />} />
-              <Route path="payments" element={<Placeholder title="תשלומים" description="ניהול תשלומים פרטיים וביטוח" />} />
-              <Route path="insurance" element={<Placeholder title="ביטוח" description="דשבורד הגשות ביטוח" />} />
-              <Route path="reminders" element={<Placeholder title="תזכורות מעקב" />} />
+              <Route path="treatments" element={<Placeholder title="טיפולים" description="ניהול טיפולים מתוך פרופיל המטופל" />} />
+              <Route path="payments" element={<PaymentsPage />} />
+              <Route path="insurance" element={<InsurancePage />} />
+              <Route path="reminders" element={<RemindersPage />} />
               <Route path="reports" element={<Placeholder title="דוחות" description="הפקת דוחות ו-Excel/PDF" />} />
               <Route path="settings" element={<Placeholder title="הגדרות" />} />
             </Route>
