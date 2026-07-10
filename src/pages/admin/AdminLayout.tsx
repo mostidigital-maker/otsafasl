@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import GlobalSearch from "@/components/admin/GlobalSearch";
 import {
   LayoutDashboard, Users, Calendar, ClipboardList, Wallet,
   ShieldCheck, Bell, FileText, LogOut, Menu, X, Settings,
@@ -85,9 +86,11 @@ const AdminLayout = () => {
 
       {/* Main */}
       <div className="flex-1 min-w-0 flex flex-col">
-        <header className="h-16 bg-card border-b border-border flex items-center justify-between px-4 md:px-6 sticky top-0 z-30">
+        <header className="h-16 bg-card border-b border-border flex items-center gap-3 px-4 md:px-6 sticky top-0 z-30">
           <button className="md:hidden" onClick={() => setOpen(true)}><Menu className="w-5 h-5" /></button>
-          <div className="flex-1" />
+          <div className="flex-1 flex justify-center md:justify-start">
+            <GlobalSearch />
+          </div>
         </header>
         <main className="flex-1 p-4 md:p-6 overflow-x-hidden">
           <Outlet />
