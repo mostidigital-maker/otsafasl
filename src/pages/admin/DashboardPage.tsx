@@ -13,7 +13,7 @@ interface Stats {
   patients: number; todayAppts: number; upcoming: number; pendingReminders: number;
   monthIncome: number; outstanding: number;
 }
-interface Activity { id: string; action: string; table_name: string; created_at: string; }
+interface Activity { id: number | string; action: string; table_name: string; created_at: string; }
 
 const STATUS_COLORS: Record<string, string> = {
   pending: "hsl(var(--primary))",
