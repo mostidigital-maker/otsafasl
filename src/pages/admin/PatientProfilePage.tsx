@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowRight, User } from "lucide-react";
+import { ArrowRight, User, FileDown } from "lucide-react";
 import { InfoTab } from "@/components/admin/patient/InfoTab";
 import { TimelineTab } from "@/components/admin/patient/TimelineTab";
 import { AppointmentsTab } from "@/components/admin/patient/AppointmentsTab";
@@ -12,6 +12,8 @@ import { TreatmentsTab } from "@/components/admin/patient/TreatmentsTab";
 import { PaymentsTab } from "@/components/admin/patient/PaymentsTab";
 import { FilesTab } from "@/components/admin/patient/FilesTab";
 import { NotesTab } from "@/components/admin/patient/NotesTab";
+import { generatePatientHistoryPDF } from "@/lib/pdf/patientHistory";
+import { useToast } from "@/hooks/use-toast";
 
 export interface Patient {
   id: string; full_name: string; national_id: string | null; phone: string | null;
@@ -22,8 +24,20 @@ export interface Patient {
 
 const PatientProfilePage = () => {
   const { id } = useParams();
+  const { toast } = useToast();
   const [p, setP] = useState<Patient | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const exportPDF = async () => {
+    if (!p) return;
+    const [t, a, pay] = await Promise.all([
+      supabase.from("treatments").select("treatment_date, summary, progress, next_plan").eq("patient_id", p.id).is("deleted_at", null).order("treatment_date", { ascending: false }),
+      supabase.from("appointments").select("slot_at, status, child_name").eq("patient_id", p.id).order("slot_at", { ascending: false }),
+      supabase.from("payments").select("payment_date, amount, paid_amount, payment_type").eq("patient_id", p.id).is("deleted_at", null).order("payment_date", { ascending: false }),
+    ]);
+    generatePatientHistoryPDF(p, (t.data ?? []) as any, (a.data ?? []) as any, (pay.data ?? []) as any);
+    toast({ title: "PDF הופק בהצלחה" });
+  };
 
   const reload = () => {
     if (!id) return;
@@ -53,10 +67,13 @@ const PatientProfilePage = () => {
           <div className="w-14 h-14 rounded-full bg-primary/10 grid place-items-center">
             <User className="w-7 h-7 text-primary" />
           </div>
-          <div>
+          <div className="flex-1">
             <CardTitle className="text-2xl">{p.full_name}</CardTitle>
             <p className="text-sm text-muted-foreground" dir="ltr">{p.national_id || ""}</p>
           </div>
+          <Button variant="outline" size="sm" onClick={exportPDF} className="gap-2">
+            <FileDown className="w-4 h-4" /> ייצוא PDF
+          </Button>
         </CardHeader>
       </Card>
 
