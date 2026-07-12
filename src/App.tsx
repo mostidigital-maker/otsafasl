@@ -17,6 +17,8 @@ import PaymentsPage from "./pages/admin/PaymentsPage";
 import InsurancePage from "./pages/admin/InsurancePage";
 import Placeholder from "./pages/admin/Placeholder";
 import ReportsPage from "./pages/admin/ReportsPage";
+import TreatmentsPage from "./pages/admin/TreatmentsPage";
+import SettingsPage from "./pages/admin/SettingsPage";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 
 const queryClient = new QueryClient();
@@ -51,12 +53,12 @@ const App = () => (
               <Route path="patients" element={<PatientsPage />} />
               <Route path="patients/:id" element={<PatientProfilePage />} />
               <Route path="calendar" element={<LegacyAdminPage />} />
-              <Route path="treatments" element={<Placeholder title="טיפולים" description="ניהול טיפולים מתוך פרופיל המטופל" />} />
+              <Route path="treatments" element={<TreatmentsPage />} />
               <Route path="payments" element={<PaymentsPage />} />
               <Route path="insurance" element={<InsurancePage />} />
               <Route path="reminders" element={<RemindersPage />} />
               <Route path="reports" element={<ReportsPage />} />
-              <Route path="settings" element={<Placeholder title="הגדרות" />} />
+              <Route path="settings" element={<SettingsPage />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
