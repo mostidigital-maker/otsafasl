@@ -19,6 +19,7 @@ import Placeholder from "./pages/admin/Placeholder";
 import ReportsPage from "./pages/admin/ReportsPage";
 import TreatmentsPage from "./pages/admin/TreatmentsPage";
 import SettingsPage from "./pages/admin/SettingsPage";
+import CalendarPage from "./pages/admin/CalendarPage";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 
 const queryClient = new QueryClient();
@@ -52,7 +53,8 @@ const App = () => (
               <Route index element={<DashboardPage />} />
               <Route path="patients" element={<PatientsPage />} />
               <Route path="patients/:id" element={<PatientProfilePage />} />
-              <Route path="calendar" element={<LegacyAdminPage />} />
+              <Route path="calendar" element={<CalendarPage />} />
+              <Route path="legacy" element={<LegacyAdminPage />} />
               <Route path="treatments" element={<TreatmentsPage />} />
               <Route path="payments" element={<PaymentsPage />} />
               <Route path="insurance" element={<InsurancePage />} />

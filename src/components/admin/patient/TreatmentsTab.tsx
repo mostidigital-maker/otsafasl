@@ -9,8 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Plus } from "lucide-react";
+import { Plus, FileDown } from "lucide-react";
 import { format } from "date-fns";
+import { generateTreatmentPDF } from "@/lib/pdf/treatmentSummary";
 
 interface Treatment {
   id: string; treatment_date: string; summary: string | null; assessment: string | null;
@@ -27,7 +28,7 @@ const emptyForm = {
   requires_follow_up: false, follow_up_date: "", follow_up_priority: "medium" as "low" | "medium" | "high",
 };
 
-export const TreatmentsTab = ({ patientId }: { patientId: string }) => {
+export const TreatmentsTab = ({ patientId, patientName = "" }: { patientId: string; patientName?: string }) => {
   const { toast } = useToast();
   const [rows, setRows] = useState<Treatment[]>([]);
   const [open, setOpen] = useState(false);
@@ -147,11 +148,17 @@ export const TreatmentsTab = ({ patientId }: { patientId: string }) => {
       {rows.map((r) => (
         <Card key={r.id}>
           <CardHeader className="pb-2">
-            <CardTitle className="text-base flex justify-between items-center">
+            <CardTitle className="text-base flex justify-between items-center gap-2">
               <span>טיפול</span>
-              <span className="text-sm text-muted-foreground font-normal" dir="ltr">
-                {format(new Date(r.treatment_date), "dd/MM/yyyy")}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground font-normal" dir="ltr">
+                  {format(new Date(r.treatment_date), "dd/MM/yyyy")}
+                </span>
+                <Button size="sm" variant="ghost" className="h-7 gap-1 text-xs"
+                  onClick={() => generateTreatmentPDF(patientName, r)}>
+                  <FileDown className="w-3 h-3" /> PDF
+                </Button>
+              </div>
             </CardTitle>
           </CardHeader>
           <CardContent className="grid gap-2 text-sm">
