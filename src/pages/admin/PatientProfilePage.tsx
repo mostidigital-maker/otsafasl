@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams, useSearchParams, Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -24,6 +24,8 @@ export interface Patient {
 
 const PatientProfilePage = () => {
   const { id } = useParams();
+  const [sp] = useSearchParams();
+  const initialTab = sp.get("tab") ?? "timeline";
   const { toast } = useToast();
   const [p, setP] = useState<Patient | null>(null);
   const [loading, setLoading] = useState(true);
@@ -77,7 +79,7 @@ const PatientProfilePage = () => {
         </CardHeader>
       </Card>
 
-      <Tabs defaultValue="timeline">
+      <Tabs defaultValue={initialTab}>
         <TabsList className="flex-wrap">
           <TabsTrigger value="timeline">ציר זמן</TabsTrigger>
           <TabsTrigger value="info">פרטים אישיים</TabsTrigger>
@@ -90,7 +92,7 @@ const PatientProfilePage = () => {
         <TabsContent value="timeline"><TimelineTab patientId={p.id} /></TabsContent>
         <TabsContent value="info"><InfoTab patient={p} onSaved={reload} /></TabsContent>
         <TabsContent value="appointments"><AppointmentsTab patientId={p.id} /></TabsContent>
-        <TabsContent value="treatments"><TreatmentsTab patientId={p.id} /></TabsContent>
+        <TabsContent value="treatments"><TreatmentsTab patientId={p.id} patientName={p.full_name} /></TabsContent>
         <TabsContent value="payments"><PaymentsTab patientId={p.id} /></TabsContent>
         <TabsContent value="files"><FilesTab patientId={p.id} /></TabsContent>
         <TabsContent value="notes"><NotesTab patientId={p.id} /></TabsContent>
