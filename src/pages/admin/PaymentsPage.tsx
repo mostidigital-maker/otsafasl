@@ -64,8 +64,9 @@ const PaymentsPage = () => {
       {rows.length === 0 && <p className="text-muted-foreground">אין תשלומים.</p>}
       {rows.map((r) => {
         const bal = Number(r.treatment_price) - Number(r.patient_paid) - Number(r.insurance_paid);
+        const pending = r.needs_insurance_submission;
         return (
-          <Card key={r.id} className="p-4 flex flex-wrap items-center gap-3">
+          <Card key={r.id} className={`p-4 flex flex-wrap items-center gap-3 ${pending ? "border-destructive/50 bg-destructive/5" : ""}`}>
             <div className="flex-1 min-w-[180px]">
               {r.patient ? (
                 <Link to={`/admin/patients/${r.patient.id}`} className="font-medium text-primary hover:underline">
@@ -75,6 +76,7 @@ const PaymentsPage = () => {
               <p className="text-xs text-muted-foreground" dir="ltr">{format(new Date(r.payment_date), "dd/MM/yyyy")}</p>
             </div>
             <div className="text-sm">₪{r.treatment_price}</div>
+            {pending && <Badge variant="destructive">ממתין מהביטוח</Badge>}
             <Badge variant={bal > 0 ? "destructive" : "default"}>יתרה ₪{bal}</Badge>
           </Card>
         );
