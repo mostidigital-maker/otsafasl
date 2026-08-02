@@ -3,41 +3,73 @@ import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
-import { Download } from "lucide-react";
+import { Download, Check } from "lucide-react";
 import * as XLSX from "xlsx";
 
 interface Row {
   id: string; payment_date: string; insurance_paid: number; treatment_price: number;
+  patient_paid: number;
   insurance_provider: string | null; needs_insurance_submission: boolean;
   patient: { id: string; full_name: string; national_id: string | null } | null;
 }
 
 const InsurancePage = () => {
+  const { toast } = useToast();
   const [rows, setRows] = useState<Row[]>([]);
+  const [month, setMonth] = useState(new Date().toISOString().slice(0, 7));
+  const [selected, setSelected] = useState<Record<string, boolean>>({});
+  const [busy, setBusy] = useState(false);
 
-  useEffect(() => {
+  const load = () => {
     supabase.from("payments").select("*, patient:patients(id, full_name, national_id)")
       .is("deleted_at", null)
       .in("payment_type", ["insurance", "mixed"])
       .order("payment_date", { ascending: false })
-      .then(({ data }) => setRows((data ?? []) as any));
-  }, []);
+      .then(({ data }) => { setRows((data ?? []) as any); setSelected({}); });
+  };
 
+  useEffect(() => { load(); }, []);
+
+  const inMonth = (d: string) => d.slice(0, 7) === month;
+  const monthRows = rows.filter((r) => inMonth(r.payment_date));
   const pending = rows.filter((r) => r.needs_insurance_submission);
-  const totalPending = pending.reduce((s, r) => s + Number(r.treatment_price) - Number(r.insurance_paid), 0);
+  const remainingOf = (r: Row) => Number(r.treatment_price) - Number(r.patient_paid) - Number(r.insurance_paid);
+  const totalPending = pending.reduce((s, r) => s + remainingOf(r), 0);
+  const monthPending = monthRows.filter((r) => r.needs_insurance_submission);
+  const monthPendingTotal = monthPending.reduce((s, r) => s + remainingOf(r), 0);
+
+  const selectedIds = Object.keys(selected).filter((k) => selected[k]);
+
+  const settle = async (targets: Row[]) => {
+    if (targets.length === 0) return;
+    setBusy(true);
+    for (const r of targets) {
+      const remaining = remainingOf(r);
+      await supabase.from("payments").update({
+        insurance_paid: Number(r.insurance_paid) + (remaining > 0 ? remaining : 0),
+        needs_insurance_submission: false,
+      }).eq("id", r.id);
+    }
+    setBusy(false);
+    toast({ title: `סומנו ${targets.length} תשלומים כשולמו ע"י הביטוח` });
+    load();
+  };
 
   const exportExcel = () => {
-    const data = pending.map((r) => ({
+    const data = monthPending.map((r) => ({
       תאריך: r.payment_date, מטופל: r.patient?.full_name || "", "ת.ז": r.patient?.national_id || "",
-      "יתרה להגשה": Number(r.treatment_price) - Number(r.insurance_paid),
+      "יתרה להגשה": remainingOf(r),
       "ספק": r.insurance_provider || "",
     }));
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "ביטוח");
-    XLSX.writeFile(wb, `insurance-${new Date().toISOString().slice(0, 10)}.xlsx`);
+    XLSX.writeFile(wb, `insurance-${month}.xlsx`);
   };
 
   return (
@@ -47,34 +79,68 @@ const InsurancePage = () => {
           <h1 className="text-2xl font-bold">ביטוח</h1>
           <p className="text-muted-foreground text-sm">הגשות ממתינות והחזרים</p>
         </div>
-        <Button onClick={exportExcel} className="gap-2"><Download className="w-4 h-4" /> ייצוא Excel</Button>
+        <div className="flex items-end gap-2 flex-wrap">
+          <Input type="month" dir="ltr" className="w-40" value={month} onChange={(e) => setMonth(e.target.value)} />
+          <Button onClick={exportExcel} className="gap-2"><Download className="w-4 h-4" /> ייצוא Excel לחודש</Button>
+        </div>
       </div>
 
-      <Card className="p-4">
-        <p className="text-xs text-muted-foreground">סה"כ ממתין להגשה</p>
-        <p className="text-2xl font-bold">₪{totalPending}</p>
-      </Card>
+      <div className="grid gap-3 md:grid-cols-3">
+        <Card className="p-4">
+          <p className="text-xs text-muted-foreground">סה"כ ממתין להגשה (הכל)</p>
+          <p className="text-2xl font-bold text-destructive">₪{totalPending}</p>
+        </Card>
+        <Card className="p-4">
+          <p className="text-xs text-muted-foreground">ממתין בחודש {month}</p>
+          <p className="text-2xl font-bold text-destructive">₪{monthPendingTotal}</p>
+          <p className="text-xs text-muted-foreground">{monthPending.length} תשלומים</p>
+        </Card>
+        <Card className="p-4 flex flex-col justify-between gap-2">
+          <p className="text-xs text-muted-foreground">סגירת חודש — כללית שילמה</p>
+          <Button disabled={busy || monthPending.length === 0} className="gap-2" onClick={() => settle(monthPending)}>
+            <Check className="w-4 h-4" /> סמן את כל החודש כשולם
+          </Button>
+          <Button variant="outline" size="sm" disabled={busy || selectedIds.length === 0}
+            onClick={() => settle(rows.filter((r) => selected[r.id]))}>
+            סמן נבחרים ({selectedIds.length})
+          </Button>
+        </Card>
+      </div>
 
       {rows.length === 0 && <p className="text-muted-foreground">אין תשלומי ביטוח.</p>}
-      {rows.map((r) => (
-        <Card key={r.id} className="p-4 flex flex-wrap items-center gap-3">
-          <div className="flex-1 min-w-[180px]">
-            {r.patient ? (
-              <Link to={`/admin/patients/${r.patient.id}`} className="font-medium text-primary hover:underline">
-                {r.patient.full_name}
-              </Link>
-            ) : "—"}
-            <p className="text-xs text-muted-foreground" dir="ltr">
-              {r.patient?.national_id} · {format(new Date(r.payment_date), "dd/MM/yyyy")}
-            </p>
-          </div>
-          <div className="text-sm">מחיר: ₪{r.treatment_price}</div>
-          <div className="text-sm">שולם ביטוח: ₪{r.insurance_paid}</div>
-          <Badge variant={r.needs_insurance_submission ? "destructive" : "default"}>
-            {r.needs_insurance_submission ? "טרם הוגש" : "הוגש"}
-          </Badge>
-        </Card>
-      ))}
+      {rows.map((r) => {
+        const remaining = remainingOf(r);
+        const isPending = r.needs_insurance_submission;
+        return (
+          <Card key={r.id} className={`p-4 flex flex-wrap items-center gap-3 ${isPending ? "border-destructive/50 bg-destructive/5" : ""}`}>
+            {isPending && (
+              <Checkbox checked={!!selected[r.id]}
+                onCheckedChange={(v) => setSelected({ ...selected, [r.id]: !!v })} />
+            )}
+            <div className="flex-1 min-w-[180px]">
+              {r.patient ? (
+                <Link to={`/admin/patients/${r.patient.id}`} className="font-medium text-primary hover:underline">
+                  {r.patient.full_name}
+                </Link>
+              ) : "—"}
+              <p className="text-xs text-muted-foreground" dir="ltr">
+                {r.patient?.national_id} · {format(new Date(r.payment_date), "dd/MM/yyyy")}
+              </p>
+            </div>
+            <div className="text-sm">מחיר: ₪{r.treatment_price}</div>
+            <div className="text-sm">שולם ביטוח: ₪{r.insurance_paid}</div>
+            {isPending && <div className="text-sm text-destructive font-medium">להחזר: ₪{remaining}</div>}
+            <Badge variant={isPending ? "destructive" : "default"}>
+              {isPending ? "טרם שולם" : "שולם ✓"}
+            </Badge>
+            {isPending && (
+              <Button size="sm" variant="outline" className="gap-1" disabled={busy} onClick={() => settle([r])}>
+                <Check className="w-4 h-4" /> שולם
+              </Button>
+            )}
+          </Card>
+        );
+      })}
     </div>
   );
 };
