@@ -10,11 +10,9 @@ import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { Download, Check } from "lucide-react";
 import * as XLSX from "xlsx";
+import { balanceOf, settlePayment, PaymentRecord } from "@/components/admin/PaymentFormDialog";
 
-interface Row {
-  id: string; payment_date: string; insurance_paid: number; treatment_price: number;
-  patient_paid: number;
-  insurance_provider: string | null; needs_insurance_submission: boolean;
+interface Row extends PaymentRecord {
   patient: { id: string; full_name: string; national_id: string | null } | null;
 }
 
@@ -38,7 +36,7 @@ const InsurancePage = () => {
   const inMonth = (d: string) => d.slice(0, 7) === month;
   const monthRows = rows.filter((r) => inMonth(r.payment_date));
   const pending = rows.filter((r) => r.needs_insurance_submission);
-  const remainingOf = (r: Row) => Number(r.treatment_price) - Number(r.patient_paid) - Number(r.insurance_paid);
+  const remainingOf = (r: Row) => balanceOf(r);
   const totalPending = pending.reduce((s, r) => s + remainingOf(r), 0);
   const monthPending = monthRows.filter((r) => r.needs_insurance_submission);
   const monthPendingTotal = monthPending.reduce((s, r) => s + remainingOf(r), 0);
@@ -49,11 +47,7 @@ const InsurancePage = () => {
     if (targets.length === 0) return;
     setBusy(true);
     for (const r of targets) {
-      const remaining = remainingOf(r);
-      await supabase.from("payments").update({
-        insurance_paid: Number(r.insurance_paid) + (remaining > 0 ? remaining : 0),
-        needs_insurance_submission: false,
-      }).eq("id", r.id);
+      await settlePayment(r);
     }
     setBusy(false);
     toast({ title: `סומנו ${targets.length} תשלומים כשולמו ע"י הביטוח` });
