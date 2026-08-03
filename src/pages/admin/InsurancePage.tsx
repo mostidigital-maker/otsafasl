@@ -8,7 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
-import { Download, Check } from "lucide-react";
+import { Download, Check, ChevronLeft, ChevronRight } from "lucide-react";
 import * as XLSX from "xlsx";
 import { balanceOf, settlePayment, PaymentRecord } from "@/components/admin/PaymentFormDialog";
 
