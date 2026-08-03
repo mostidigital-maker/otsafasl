@@ -45,6 +45,14 @@ export const AppointmentsTab = ({ patientId }: { patientId: string }) => {
     load();
   };
 
+  const remove = async (id: string) => {
+    if (!confirm("למחוק את התור לצמיתות?")) return;
+    const { error } = await supabase.from("appointments").delete().eq("id", id);
+    if (error) return toast({ title: "שגיאה", description: error.message, variant: "destructive" });
+    toast({ title: "התור נמחק" });
+    load();
+  };
+
   if (rows.length === 0) return <p className="text-muted-foreground p-4">אין תורים למטופל זה.</p>;
 
   return (
