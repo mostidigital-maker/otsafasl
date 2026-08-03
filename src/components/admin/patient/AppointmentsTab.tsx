@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
+import { Trash2 } from "lucide-react";
 
 interface Row { id: string; slot_at: string; status: string; notes: string | null; duration_minutes: number; }
 
@@ -45,6 +46,14 @@ export const AppointmentsTab = ({ patientId }: { patientId: string }) => {
     load();
   };
 
+  const remove = async (id: string) => {
+    if (!confirm("למחוק את התור לצמיתות?")) return;
+    const { error } = await supabase.from("appointments").delete().eq("id", id);
+    if (error) return toast({ title: "שגיאה", description: error.message, variant: "destructive" });
+    toast({ title: "התור נמחק" });
+    load();
+  };
+
   if (rows.length === 0) return <p className="text-muted-foreground p-4">אין תורים למטופל זה.</p>;
 
   return (
@@ -63,6 +72,9 @@ export const AppointmentsTab = ({ patientId }: { patientId: string }) => {
             {STATUSES.filter((s) => s.v !== r.status).map((s) => (
               <Button key={s.v} size="sm" variant="outline" onClick={() => setStatus(r.id, s.v)}>{s.l}</Button>
             ))}
+            <Button size="icon" variant="ghost" onClick={() => remove(r.id)} title="מחיקה">
+              <Trash2 className="w-4 h-4 text-destructive" />
+            </Button>
           </div>
         </Card>
       ))}

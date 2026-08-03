@@ -63,7 +63,7 @@ export const AppointmentsList = () => {
 
   const load = async () => {
     const [a, l] = await Promise.all([
-      supabase.from("appointments").select("*").order("slot_at", { ascending: true }),
+      supabase.from("appointments").select("*").is("deleted_at", null).order("slot_at", { ascending: true }),
       supabase.from("locations").select("*"),
     ]);
     if (a.data) setRows(a.data as Appointment[]);
@@ -90,8 +90,10 @@ export const AppointmentsList = () => {
   };
 
   const remove = async (id: string) => {
+    if (!confirm("למחוק את התור לצמיתות?")) return;
     const { error } = await supabase.from("appointments").delete().eq("id", id);
     if (error) return toast({ title: "Error", description: error.message, variant: "destructive" });
+    toast({ title: "התור נמחק" });
     load();
   };
 

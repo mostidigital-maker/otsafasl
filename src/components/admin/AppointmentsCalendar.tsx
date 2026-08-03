@@ -3,7 +3,7 @@ import {
   addDays, addMonths, addWeeks, endOfMonth, endOfWeek, format,
   isSameDay, isSameMonth, isToday, startOfMonth, startOfWeek, subMonths, subWeeks,
 } from "date-fns";
-import { ChevronLeft, ChevronRight, MapPin, MessageCircle } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin, MessageCircle, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -40,16 +40,23 @@ export const AppointmentsCalendar = () => {
   const [cursor, setCursor] = useState<Date>(new Date());
   const [dayDialog, setDayDialog] = useState<Date | null>(null);
 
-  useEffect(() => {
-    (async () => {
-      const [a, l] = await Promise.all([
-        supabase.from("appointments").select("id,location_id,slot_at,child_name,child_age,parent_name,phone,status").order("slot_at"),
-        supabase.from("locations").select("id,name_ar,name_he,name_en"),
-      ]);
-      if (a.data) setRows(a.data as Appointment[]);
-      if (l.data) setLocs(l.data as Loc[]);
-    })();
-  }, []);
+  const load = async () => {
+    const [a, l] = await Promise.all([
+      supabase.from("appointments").select("id,location_id,slot_at,child_name,child_age,parent_name,phone,status").is("deleted_at", null).order("slot_at"),
+      supabase.from("locations").select("id,name_ar,name_he,name_en"),
+    ]);
+    if (a.data) setRows(a.data as Appointment[]);
+    if (l.data) setLocs(l.data as Loc[]);
+  };
+
+  useEffect(() => { load(); }, []);
+
+  const removeAppointment = async (id: string) => {
+    if (!confirm("למחוק את התור לצמיתות?")) return;
+    const { error } = await supabase.from("appointments").delete().eq("id", id);
+    if (error) return;
+    setRows(prev => prev.filter(r => r.id !== id));
+  };
 
   const locMap = useMemo(() => Object.fromEntries(locs.map(l => [l.id, l])), [locs]);
   const locName = (id: string) => (locMap[id] ? (locMap[id] as Loc)[`name_${lang}` as const] : "");
@@ -141,6 +148,12 @@ export const AppointmentsCalendar = () => {
                 </div>
                 <div className="text-xs text-muted-foreground">
                   {a.parent_name} · <span dir="ltr">{a.phone}</span> · {locName(a.location_id)}
+                </div>
+                <div className="flex justify-end">
+                  <Button size="sm" variant="ghost" className="h-7 text-xs gap-1 text-destructive hover:text-destructive"
+                    onClick={() => removeAppointment(a.id)}>
+                    <Trash2 className="w-3 h-3" /> מחיקה
+                  </Button>
                 </div>
               </div>
             ))}

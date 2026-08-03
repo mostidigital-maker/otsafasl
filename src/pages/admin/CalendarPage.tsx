@@ -4,7 +4,7 @@ import {
   isSameMonth, isToday, startOfMonth, startOfWeek, subMonths, subWeeks,
 } from "date-fns";
 import { useNavigate } from "react-router-dom";
-import { ChevronLeft, ChevronRight, MapPin, ExternalLink, CheckCircle2, UserCheck, XCircle, ClipboardList } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin, ExternalLink, CheckCircle2, UserCheck, XCircle, ClipboardList, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -51,7 +51,7 @@ const CalendarPage = () => {
 
   const load = async () => {
     const [a, l] = await Promise.all([
-      supabase.from("appointments").select("id,location_id,slot_at,child_name,child_age,parent_name,phone,status,patient_id").order("slot_at"),
+      supabase.from("appointments").select("id,location_id,slot_at,child_name,child_age,parent_name,phone,status,patient_id").is("deleted_at", null).order("slot_at"),
       supabase.from("locations").select("id,name_he"),
     ]);
     if (a.data) setRows(a.data as Appointment[]);
@@ -83,6 +83,14 @@ const CalendarPage = () => {
     if (error) return toast({ title: "שגיאה", description: error.message, variant: "destructive" });
     toast({ title: "עודכן" });
     setRows(prev => prev.map(r => r.id === id ? { ...r, status } : r));
+  };
+
+  const removeAppointment = async (id: string) => {
+    if (!confirm("למחוק את התור לצמיתות?")) return;
+    const { error } = await supabase.from("appointments").delete().eq("id", id);
+    if (error) return toast({ title: "שגיאה", description: error.message, variant: "destructive" });
+    toast({ title: "התור נמחק" });
+    setRows(prev => prev.filter(r => r.id !== id));
   };
 
   const goPrev = () => setCursor(view === "month" ? subMonths(cursor, 1) : view === "week" ? subWeeks(cursor, 1) : addDays(cursor, -1));
@@ -178,6 +186,10 @@ const CalendarPage = () => {
                       </Button>
                     </>
                   )}
+                  <Button size="sm" variant="ghost" className="h-7 text-xs gap-1 text-destructive hover:text-destructive"
+                    onClick={() => removeAppointment(a.id)}>
+                    <Trash2 className="w-3 h-3" /> מחיקה
+                  </Button>
                 </div>
               </div>
             ))}
