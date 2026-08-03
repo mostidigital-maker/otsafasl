@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
+import { Trash2 } from "lucide-react";
 
 interface Row { id: string; slot_at: string; status: string; notes: string | null; duration_minutes: number; }
 
@@ -71,6 +72,9 @@ export const AppointmentsTab = ({ patientId }: { patientId: string }) => {
             {STATUSES.filter((s) => s.v !== r.status).map((s) => (
               <Button key={s.v} size="sm" variant="outline" onClick={() => setStatus(r.id, s.v)}>{s.l}</Button>
             ))}
+            <Button size="icon" variant="ghost" onClick={() => remove(r.id)} title="מחיקה">
+              <Trash2 className="w-4 h-4 text-destructive" />
+            </Button>
           </div>
         </Card>
       ))}
