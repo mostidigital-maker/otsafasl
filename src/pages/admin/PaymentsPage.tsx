@@ -3,9 +3,11 @@ import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { format } from "date-fns";
+import { format, startOfMonth, endOfMonth, subMonths } from "date-fns";
 import * as XLSX from "xlsx";
 import { Download, Pencil, Trash2, Check } from "lucide-react";
 import { PaymentFormDialog, PaymentRecord, balanceOf, effectivePaid, settlePayment } from "@/components/admin/PaymentFormDialog";
@@ -13,6 +15,7 @@ import { PaymentFormDialog, PaymentRecord, balanceOf, effectivePaid, settlePayme
 interface Row extends PaymentRecord {
   patient: { id: string; full_name: string } | null;
 }
+
 
 const PaymentsPage = () => {
   const { toast } = useToast();
