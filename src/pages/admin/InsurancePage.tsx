@@ -58,16 +58,26 @@ const InsurancePage = () => {
     load();
   };
 
-  const exportExcel = () => {
-    const data = monthPending.map((r) => ({
+  const exportExcel = (onlyPending: boolean) => {
+    const src = onlyPending ? monthPending : monthRows;
+    const data = src.map((r) => ({
       תאריך: r.payment_date, מטופל: r.patient?.full_name || "", "ת.ז": r.patient?.national_id || "",
+      מחיר: Number(r.treatment_price),
+      "שולם ביטוח": Number(r.insurance_paid),
       "יתרה להגשה": remainingOf(r),
       "ספק": r.insurance_provider || "",
+      סטטוס: r.needs_insurance_submission ? "טרם שולם" : "שולם",
     }));
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "ביטוח");
-    XLSX.writeFile(wb, `insurance-${month}.xlsx`);
+    XLSX.writeFile(wb, `insurance-${month}${onlyPending ? "-pending" : ""}.xlsx`);
+  };
+
+  const shiftMonth = (delta: number) => {
+    const [y, m] = month.split("-").map(Number);
+    const d = new Date(y, m - 1 + delta, 1);
+    setMonth(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`);
   };
 
   return (
@@ -75,11 +85,14 @@ const InsurancePage = () => {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-2xl font-bold">ביטוח</h1>
-          <p className="text-muted-foreground text-sm">הגשות ממתינות והחזרים</p>
+          <p className="text-muted-foreground text-sm">הגשות ממתינות והחזרים — כולל חודשים קודמים</p>
         </div>
         <div className="flex items-end gap-2 flex-wrap">
+          <Button variant="outline" size="icon" onClick={() => shiftMonth(-1)}><ChevronRight className="w-4 h-4" /></Button>
           <Input type="month" dir="ltr" className="w-40" value={month} onChange={(e) => setMonth(e.target.value)} />
-          <Button onClick={exportExcel} className="gap-2"><Download className="w-4 h-4" /> ייצוא Excel לחודש</Button>
+          <Button variant="outline" size="icon" onClick={() => shiftMonth(1)}><ChevronLeft className="w-4 h-4" /></Button>
+          <Button onClick={() => exportExcel(false)} className="gap-2"><Download className="w-4 h-4" /> ייצוא כל החודש</Button>
+          <Button variant="outline" onClick={() => exportExcel(true)} className="gap-2"><Download className="w-4 h-4" /> ממתינים בלבד</Button>
         </div>
       </div>
 
@@ -91,7 +104,7 @@ const InsurancePage = () => {
         <Card className="p-4">
           <p className="text-xs text-muted-foreground">ממתין בחודש {month}</p>
           <p className="text-2xl font-bold text-destructive">₪{monthPendingTotal}</p>
-          <p className="text-xs text-muted-foreground">{monthPending.length} תשלומים</p>
+          <p className="text-xs text-muted-foreground">{monthPending.length} מתוך {monthRows.length} · סה"כ חיובים ₪{monthTotal}</p>
         </Card>
         <Card className="p-4 flex flex-col justify-between gap-2">
           <p className="text-xs text-muted-foreground">סגירת חודש — כללית שילמה</p>
@@ -105,8 +118,14 @@ const InsurancePage = () => {
         </Card>
       </div>
 
-      {rows.length === 0 && <p className="text-muted-foreground">אין תשלומי ביטוח.</p>}
-      {rows.map((r) => {
+      <div className="flex items-center gap-2">
+        <Button variant={showAll ? "outline" : "default"} size="sm" onClick={() => setShowAll(false)}>חודש {month}</Button>
+        <Button variant={showAll ? "default" : "outline"} size="sm" onClick={() => setShowAll(true)}>כל התשלומים ({rows.length})</Button>
+      </div>
+
+      {visibleRows.length === 0 && <p className="text-muted-foreground">אין תשלומי ביטוח בטווח שנבחר.</p>}
+      {visibleRows.map((r) => {
+
         const remaining = remainingOf(r);
         const isPending = r.needs_insurance_submission;
         return (
