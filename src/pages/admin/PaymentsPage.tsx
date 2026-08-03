@@ -19,17 +19,29 @@ interface Row extends PaymentRecord {
 
 const PaymentsPage = () => {
   const { toast } = useToast();
-  const [rows, setRows] = useState<Row[]>([]);
+  const [allRows, setAllRows] = useState<Row[]>([]);
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<PaymentRecord | null>(null);
+  const today = new Date();
+  const [from, setFrom] = useState(format(startOfMonth(today), "yyyy-MM-dd"));
+  const [to, setTo] = useState(format(endOfMonth(today), "yyyy-MM-dd"));
 
   const load = () => {
     supabase.from("payments").select("*, patient:patients(id, full_name)")
       .is("deleted_at", null).order("payment_date", { ascending: false })
-      .then(({ data }) => setRows((data ?? []) as any));
+      .then(({ data }) => setAllRows((data ?? []) as any));
   };
 
   useEffect(() => { load(); }, []);
+
+  const rows = allRows.filter((r) => {
+    const d = r.payment_date.slice(0, 10);
+    return (!from || d >= from) && (!to || d <= to);
+  });
+
+  const setRange = (f: Date, t: Date) => {
+    setFrom(format(f, "yyyy-MM-dd")); setTo(format(t, "yyyy-MM-dd"));
+  };
 
   const remove = async (id: string) => {
     if (!confirm("למחוק את התשלום?")) return;
@@ -63,7 +75,7 @@ const PaymentsPage = () => {
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "תשלומים");
-    XLSX.writeFile(wb, `payments-${new Date().toISOString().slice(0, 10)}.xlsx`);
+    XLSX.writeFile(wb, `payments-${from || "all"}_${to || "all"}.xlsx`);
   };
 
   return (
@@ -76,6 +88,26 @@ const PaymentsPage = () => {
         <Button onClick={exportExcel} className="gap-2"><Download className="w-4 h-4" /> ייצוא Excel</Button>
       </div>
 
+      <Card className="p-4 flex flex-wrap items-end gap-3">
+        <div className="space-y-1">
+          <Label className="text-xs">מתאריך</Label>
+          <Input type="date" dir="ltr" className="w-40" value={from} onChange={(e) => setFrom(e.target.value)} />
+        </div>
+        <div className="space-y-1">
+          <Label className="text-xs">עד תאריך</Label>
+          <Input type="date" dir="ltr" className="w-40" value={to} onChange={(e) => setTo(e.target.value)} />
+        </div>
+        <div className="flex gap-2 flex-wrap">
+          <Button variant="outline" size="sm" onClick={() => setRange(startOfMonth(today), endOfMonth(today))}>החודש</Button>
+          <Button variant="outline" size="sm" onClick={() => {
+            const p = subMonths(today, 1); setRange(startOfMonth(p), endOfMonth(p));
+          }}>חודש קודם</Button>
+          <Button variant="outline" size="sm" onClick={() => setRange(new Date(today.getFullYear(), 0, 1), new Date(today.getFullYear(), 11, 31))}>השנה</Button>
+          <Button variant="ghost" size="sm" onClick={() => { setFrom(""); setTo(""); }}>הצג הכל</Button>
+        </div>
+        <p className="text-xs text-muted-foreground">{rows.length} תשלומים בטווח</p>
+      </Card>
+
       <div className="grid grid-cols-3 gap-3">
         <Card className="p-3"><p className="text-xs text-muted-foreground">סה"כ חיובים</p><p className="text-xl font-bold">₪{totals.price}</p></Card>
         <Card className="p-3"><p className="text-xs text-muted-foreground">שולם</p><p className="text-xl font-bold text-primary">₪{totals.paid}</p></Card>
@@ -84,7 +116,8 @@ const PaymentsPage = () => {
 
       <PaymentFormDialog open={open} onOpenChange={setOpen} patientId={editing?.patient_id ?? null} payment={editing} onSaved={load} />
 
-      {rows.length === 0 && <p className="text-muted-foreground">אין תשלומים.</p>}
+      {rows.length === 0 && <p className="text-muted-foreground">אין תשלומים בטווח שנבחר.</p>}
+
       {rows.map((r) => {
         const bal = balanceOf(r);
         const pending = r.needs_insurance_submission;
