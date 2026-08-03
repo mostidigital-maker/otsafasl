@@ -186,6 +186,10 @@ const CalendarPage = () => {
                       </Button>
                     </>
                   )}
+                  <Button size="sm" variant="ghost" className="h-7 text-xs gap-1 text-destructive hover:text-destructive"
+                    onClick={() => removeAppointment(a.id)}>
+                    <Trash2 className="w-3 h-3" /> מחיקה
+                  </Button>
                 </div>
               </div>
             ))}
