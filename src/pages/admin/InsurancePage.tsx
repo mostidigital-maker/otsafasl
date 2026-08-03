@@ -33,15 +33,19 @@ const InsurancePage = () => {
 
   useEffect(() => { load(); }, []);
 
+  const [showAll, setShowAll] = useState(false);
   const inMonth = (d: string) => d.slice(0, 7) === month;
   const monthRows = rows.filter((r) => inMonth(r.payment_date));
+  const visibleRows = showAll ? rows : monthRows;
   const pending = rows.filter((r) => r.needs_insurance_submission);
   const remainingOf = (r: Row) => balanceOf(r);
   const totalPending = pending.reduce((s, r) => s + remainingOf(r), 0);
   const monthPending = monthRows.filter((r) => r.needs_insurance_submission);
   const monthPendingTotal = monthPending.reduce((s, r) => s + remainingOf(r), 0);
+  const monthTotal = monthRows.reduce((s, r) => s + Number(r.treatment_price), 0);
 
   const selectedIds = Object.keys(selected).filter((k) => selected[k]);
+
 
   const settle = async (targets: Row[]) => {
     if (targets.length === 0) return;
