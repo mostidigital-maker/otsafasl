@@ -159,7 +159,9 @@ export const ContactSection = () => {
                 </div>
                 <h3 className="text-xl font-bold text-foreground">{t.contact.locationTitle}</h3>
               </div>
-              <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{t.contact.address}</p>
+              <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                {locs.length ? locs.map(locName).join(" / ") : t.contact.address}
+              </p>
             </div>
           </motion.div>
         </div>
