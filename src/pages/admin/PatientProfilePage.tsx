@@ -32,8 +32,18 @@ const PatientProfilePage = () => {
   const [sp] = useSearchParams();
   const initialTab = sp.get("tab") ?? "timeline";
   const { toast } = useToast();
+  const nav = useNavigate();
   const [p, setP] = useState<Patient | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const remove = async () => {
+    if (!p) return;
+    const { error } = await supabase.from("patients").update({ deleted_at: new Date().toISOString() }).eq("id", p.id);
+    if (error) return toast({ title: "שגיאה", description: error.message, variant: "destructive" });
+    toast({ title: "המטופל נמחק" });
+    nav("/admin/patients");
+  };
+
 
   const exportPDF = async () => {
     if (!p) return;
