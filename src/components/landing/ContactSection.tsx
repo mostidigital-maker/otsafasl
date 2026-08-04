@@ -1,12 +1,29 @@
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Phone, MessageCircle, Clock, MapPin, Mail } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { supabase } from "@/integrations/supabase/client";
+
+interface Loc { id: string; name_ar: string; name_he: string; name_en: string; sort_order: number }
+interface WH { location_id: string; weekday: number; opens_at: string; closes_at: string }
 
 export const ContactSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const [locs, setLocs] = useState<Loc[]>([]);
+  const [hours, setHours] = useState<WH[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const [l, h] = await Promise.all([
+        supabase.from("locations").select("*").eq("is_active", true).order("sort_order"),
+        supabase.from("working_hours").select("location_id,weekday,opens_at,closes_at").eq("is_active", true).order("weekday"),
+      ]);
+      setLocs((l.data ?? []) as Loc[]);
+      setHours((h.data ?? []) as WH[]);
+    })();
+  }, []);
 
   const whatsappMessage = encodeURIComponent(t.common.whatsappMessage);
 
@@ -16,11 +33,30 @@ export const ContactSection = () => {
     { icon: Mail, label: t.contact.emailLabel, value: "info@ot-clinic.com", href: "mailto:info@ot-clinic.com", isWhatsApp: false },
   ];
 
-  const workingHours = [
+  const fallbackHours = [
     { day: t.contact.days.weekdays, hours: "08:00 - 18:00" },
     { day: t.contact.days.friday, hours: "08:00 - 13:00" },
     { day: t.contact.days.saturday, hours: t.contact.closed },
   ];
+
+  const locName = (l: Loc) => l[`name_${lang}` as const];
+
+  /** Group per location: for each weekday show ranges, or "closed". */
+  const hoursByLocation = locs
+    .map((l) => {
+      const rows = [0, 1, 2, 3, 4, 5, 6].map((wd) => {
+        const dayRows = hours.filter((h) => h.location_id === l.id && h.weekday === wd);
+        return {
+          day: t.admin.weekdays[wd],
+          hours: dayRows.length
+            ? dayRows.map((d) => `${d.opens_at.slice(0, 5)} - ${d.closes_at.slice(0, 5)}`).join(" , ")
+            : t.contact.closed,
+        };
+      });
+      return { location: locName(l), rows };
+    })
+    .filter((g) => g.rows.some((r) => r.hours !== t.contact.closed));
+
 
   return (
     <section id="contact" className="py-20 md:py-32 bg-background relative overflow-hidden">
