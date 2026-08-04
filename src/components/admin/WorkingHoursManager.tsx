@@ -8,7 +8,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Plus, Trash2 } from "lucide-react";
 
-interface WH { id: string; location_id: string; weekday: number; opens_at: string; closes_at: string; slot_minutes: number }
+interface WH { id: string; location_id: string; weekday: number; opens_at: string; closes_at: string; slot_minutes: number; is_active: boolean }
 interface Loc { id: string; name_ar: string; name_he: string; name_en: string }
 
 export const WorkingHoursManager = () => {
