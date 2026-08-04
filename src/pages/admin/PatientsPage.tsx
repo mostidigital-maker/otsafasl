@@ -1,20 +1,25 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Search, User } from "lucide-react";
+import { Plus, Search, User, Pencil, Trash2 } from "lucide-react";
 
 type Gender = "male" | "female" | "other";
 interface Patient {
   id: string; full_name: string; national_id: string | null; phone: string | null;
   parent_name: string | null; date_of_birth: string | null; gender: Gender | null;
+  email: string | null; address: string | null; notes: string | null;
 }
 
 const emptyForm = {
@@ -28,14 +33,16 @@ const PatientsPage = () => {
   const [q, setQ] = useState("");
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
+  const [editId, setEditId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
+  const [toDelete, setToDelete] = useState<Patient | null>(null);
 
   const load = async () => {
     setLoading(true);
     const { data, error } = await supabase
       .from("patients")
-      .select("id, full_name, national_id, phone, parent_name, date_of_birth, gender")
+      .select("id, full_name, national_id, phone, parent_name, date_of_birth, gender, email, address, notes")
       .is("deleted_at", null)
       .order("created_at", { ascending: false });
     setLoading(false);
@@ -50,13 +57,25 @@ const PatientsPage = () => {
     return [r.full_name, r.national_id, r.phone, r.parent_name].some((x) => x?.toLowerCase().includes(s));
   });
 
+  const openNew = () => { setEditId(null); setForm(emptyForm); setOpen(true); };
+  const openEdit = (r: Patient) => {
+    setEditId(r.id);
+    setForm({
+      full_name: r.full_name ?? "", national_id: r.national_id ?? "", phone: r.phone ?? "",
+      parent_name: r.parent_name ?? "", date_of_birth: r.date_of_birth ?? "",
+      gender: (r.gender ?? "") as "" | Gender, email: r.email ?? "",
+      address: r.address ?? "", notes: r.notes ?? "",
+    });
+    setOpen(true);
+  };
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.full_name.trim()) {
       return toast({ title: "שגיאה", description: "יש להזין שם מלא", variant: "destructive" });
     }
     setSaving(true);
-    const { error } = await supabase.from("patients").insert({
+    const payload = {
       full_name: form.full_name.trim(),
       national_id: form.national_id.trim() || null,
       phone: form.phone.trim() || null,
@@ -66,11 +85,26 @@ const PatientsPage = () => {
       email: form.email.trim() || null,
       address: form.address.trim() || null,
       notes: form.notes.trim() || null,
-    });
+    };
+    const { error } = editId
+      ? await supabase.from("patients").update(payload).eq("id", editId)
+      : await supabase.from("patients").insert(payload);
     setSaving(false);
     if (error) return toast({ title: "שגיאה", description: error.message, variant: "destructive" });
-    toast({ title: "המטופל נוסף בהצלחה" });
-    setForm(emptyForm); setOpen(false); load();
+    toast({ title: editId ? "פרטי המטופל עודכנו" : "המטופל נוסף בהצלחה" });
+    setForm(emptyForm); setEditId(null); setOpen(false); load();
+  };
+
+  const confirmDelete = async () => {
+    if (!toDelete) return;
+    const { error } = await supabase
+      .from("patients")
+      .update({ deleted_at: new Date().toISOString() })
+      .eq("id", toDelete.id);
+    setToDelete(null);
+    if (error) return toast({ title: "שגיאה", description: error.message, variant: "destructive" });
+    toast({ title: "המטופל נמחק" });
+    load();
   };
 
   return (
@@ -80,12 +114,10 @@ const PatientsPage = () => {
           <h1 className="text-2xl font-bold">מטופלים</h1>
           <p className="text-muted-foreground text-sm">ניהול פרופילי המטופלים</p>
         </div>
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button className="gap-2"><Plus className="w-4 h-4" /> מטופל חדש</Button>
-          </DialogTrigger>
+        <Button className="gap-2" onClick={openNew}><Plus className="w-4 h-4" /> מטופל חדש</Button>
+        <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) setEditId(null); }}>
           <DialogContent className="max-w-2xl" dir="rtl">
-            <DialogHeader><DialogTitle>מטופל חדש</DialogTitle></DialogHeader>
+            <DialogHeader><DialogTitle>{editId ? "עריכת מטופל" : "מטופל חדש"}</DialogTitle></DialogHeader>
             <form onSubmit={submit} className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2 md:col-span-2">
                 <Label>שם מלא *</Label>
@@ -152,12 +184,13 @@ const PatientsPage = () => {
                 <TableHead>הורה</TableHead>
                 <TableHead>טלפון</TableHead>
                 <TableHead>תאריך לידה</TableHead>
+                <TableHead>פעולות</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {loading && <TableRow><TableCell colSpan={5} className="text-center py-8 text-muted-foreground">טוען…</TableCell></TableRow>}
+              {loading && <TableRow><TableCell colSpan={6} className="text-center py-8 text-muted-foreground">טוען…</TableCell></TableRow>}
               {!loading && filtered.length === 0 && (
-                <TableRow><TableCell colSpan={5} className="text-center py-8 text-muted-foreground">אין מטופלים להצגה</TableCell></TableRow>
+                <TableRow><TableCell colSpan={6} className="text-center py-8 text-muted-foreground">אין מטופלים להצגה</TableCell></TableRow>
               )}
               {filtered.map((r) => (
                 <TableRow key={r.id} className="hover:bg-muted/50">
@@ -170,12 +203,37 @@ const PatientsPage = () => {
                   <TableCell>{r.parent_name || "—"}</TableCell>
                   <TableCell dir="ltr">{r.phone || "—"}</TableCell>
                   <TableCell dir="ltr">{r.date_of_birth || "—"}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-1">
+                      <Button size="icon" variant="ghost" onClick={() => openEdit(r)} title="עריכה">
+                        <Pencil className="w-4 h-4" />
+                      </Button>
+                      <Button size="icon" variant="ghost" onClick={() => setToDelete(r)} title="מחיקה" className="text-destructive">
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </div>
       </Card>
+
+      <AlertDialog open={!!toDelete} onOpenChange={(v) => !v && setToDelete(null)}>
+        <AlertDialogContent dir="rtl">
+          <AlertDialogHeader>
+            <AlertDialogTitle>מחיקת מטופל</AlertDialogTitle>
+            <AlertDialogDescription>
+              האם למחוק את {toDelete?.full_name}? המטופל יוסר מהרשימה (ניתן לשחזור על ידי מנהל המערכת).
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>ביטול</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">מחק</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
