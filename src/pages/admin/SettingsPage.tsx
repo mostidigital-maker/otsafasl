@@ -9,6 +9,10 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Plus, Trash2 } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { WorkingHoursManager } from "@/components/admin/WorkingHoursManager";
+import { BlockedSlotsManager } from "@/components/admin/BlockedSlotsManager";
+import { LocationsManager } from "@/components/admin/LocationsManager";
 
 interface Therapist {
   id: string; full_name: string; title: string | null;
