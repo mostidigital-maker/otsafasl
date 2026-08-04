@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
-import { useParams, useSearchParams, Link } from "react-router-dom";
+import { useParams, useSearchParams, Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowRight, User, FileDown } from "lucide-react";
+import { ArrowRight, User, FileDown, Trash2 } from "lucide-react";
 import { InfoTab } from "@/components/admin/patient/InfoTab";
 import { TimelineTab } from "@/components/admin/patient/TimelineTab";
 import { AppointmentsTab } from "@/components/admin/patient/AppointmentsTab";
@@ -14,6 +18,7 @@ import { FilesTab } from "@/components/admin/patient/FilesTab";
 import { NotesTab } from "@/components/admin/patient/NotesTab";
 import { generatePatientHistoryPDF } from "@/lib/pdf/patientHistory";
 import { useToast } from "@/hooks/use-toast";
+
 
 export interface Patient {
   id: string; full_name: string; national_id: string | null; phone: string | null;
