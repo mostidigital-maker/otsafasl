@@ -147,7 +147,10 @@ const SettingsPage = () => {
           ))}
         </CardContent>
       </Card>
+        </TabsContent>
+      </Tabs>
     </div>
+
   );
 };
 
