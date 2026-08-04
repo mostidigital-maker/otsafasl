@@ -40,7 +40,14 @@ export const WorkingHoursManager = () => {
   };
 
   const remove = async (id: string) => {
+    if (!confirm("למחוק את שעת הפעילות?")) return;
     await supabase.from("working_hours").delete().eq("id", id);
+    load();
+  };
+
+  const toggle = async (h: WH) => {
+    const { error } = await supabase.from("working_hours").update({ is_active: !h.is_active }).eq("id", h.id);
+    if (error) return toast({ title: "Error", description: error.message, variant: "destructive" });
     load();
   };
 
