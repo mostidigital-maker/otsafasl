@@ -37,7 +37,7 @@ export const BookingSection = () => {
   const [form, setForm] = useState({ childName: "", childAge: "", childNationalId: "", parentName: "", phone: "", email: "" });
 
   useEffect(() => {
-    supabase.from("locations").select("*").order("sort_order").then(({ data }) => {
+    supabase.from("locations").select("*").eq("is_active", true).order("sort_order").then(({ data }) => {
       if (data) setLocations(data as Location[]);
     });
   }, []);

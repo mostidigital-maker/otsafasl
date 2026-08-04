@@ -9,6 +9,10 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Plus, Trash2 } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { WorkingHoursManager } from "@/components/admin/WorkingHoursManager";
+import { BlockedSlotsManager } from "@/components/admin/BlockedSlotsManager";
+import { LocationsManager } from "@/components/admin/LocationsManager";
 
 interface Therapist {
   id: string; full_name: string; title: string | null;
@@ -61,10 +65,41 @@ const SettingsPage = () => {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">הגדרות</h1>
-        <p className="text-muted-foreground text-sm">ניהול צוות הקליניקה</p>
+        <p className="text-muted-foreground text-sm">צוות הקליניקה, שעות פעילות, מקומות וחסימות תורים</p>
       </div>
 
+      <Tabs defaultValue="hours">
+        <TabsList className="flex-wrap">
+          <TabsTrigger value="hours">שעות פעילות</TabsTrigger>
+          <TabsTrigger value="locations">מקומות</TabsTrigger>
+          <TabsTrigger value="blocked">חסימת תורים</TabsTrigger>
+          <TabsTrigger value="team">מטפלים</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="hours" className="mt-6">
+          <Card>
+            <CardHeader><CardTitle className="text-base">שעות פעילות לקביעת תורים</CardTitle></CardHeader>
+            <CardContent><WorkingHoursManager /></CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="locations" className="mt-6">
+          <Card>
+            <CardHeader><CardTitle className="text-base">מקומות טיפול</CardTitle></CardHeader>
+            <CardContent><LocationsManager /></CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="blocked" className="mt-6">
+          <Card>
+            <CardHeader><CardTitle className="text-base">חסימת טווחי זמן</CardTitle></CardHeader>
+            <CardContent><BlockedSlotsManager /></CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="team" className="mt-6">
       <Card>
+
         <CardHeader className="flex-row items-center justify-between">
           <CardTitle className="text-base">מטפלים</CardTitle>
           <Dialog open={open} onOpenChange={setOpen}>
@@ -116,7 +151,10 @@ const SettingsPage = () => {
           ))}
         </CardContent>
       </Card>
+        </TabsContent>
+      </Tabs>
     </div>
+
   );
 };
 

@@ -3,12 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Plus, Trash2 } from "lucide-react";
 
-interface WH { id: string; location_id: string; weekday: number; opens_at: string; closes_at: string; slot_minutes: number }
+interface WH { id: string; location_id: string; weekday: number; opens_at: string; closes_at: string; slot_minutes: number; is_active: boolean }
 interface Loc { id: string; name_ar: string; name_he: string; name_en: string }
 
 export const WorkingHoursManager = () => {
@@ -40,7 +42,14 @@ export const WorkingHoursManager = () => {
   };
 
   const remove = async (id: string) => {
+    if (!confirm("למחוק את שעת הפעילות?")) return;
     await supabase.from("working_hours").delete().eq("id", id);
+    load();
+  };
+
+  const toggle = async (h: WH) => {
+    const { error } = await supabase.from("working_hours").update({ is_active: !h.is_active }).eq("id", h.id);
+    if (error) return toast({ title: "Error", description: error.message, variant: "destructive" });
     load();
   };
 
@@ -96,16 +105,26 @@ export const WorkingHoursManager = () => {
               <TableHead>{t.admin.whOpens}</TableHead>
               <TableHead>{t.admin.whCloses}</TableHead>
               <TableHead>{t.admin.whSlot}</TableHead>
+              <TableHead>פעיל</TableHead>
               <TableHead></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
+            {filtered.length === 0 && (
+              <TableRow><TableCell colSpan={6} className="text-center text-muted-foreground py-6">אין שעות פעילות למקום זה.</TableCell></TableRow>
+            )}
             {filtered.map((h) => (
-              <TableRow key={h.id}>
+              <TableRow key={h.id} className={h.is_active ? "" : "opacity-60"}>
                 <TableCell>{t.admin.weekdays[h.weekday]}</TableCell>
                 <TableCell dir="ltr">{h.opens_at.slice(0, 5)}</TableCell>
                 <TableCell dir="ltr">{h.closes_at.slice(0, 5)}</TableCell>
                 <TableCell dir="ltr">{h.slot_minutes}</TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <Switch checked={h.is_active} onCheckedChange={() => toggle(h)} />
+                    <Badge variant={h.is_active ? "default" : "secondary"}>{h.is_active ? "פתוח" : "סגור"}</Badge>
+                  </div>
+                </TableCell>
                 <TableCell><Button size="icon" variant="ghost" onClick={() => remove(h.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button></TableCell>
               </TableRow>
             ))}
