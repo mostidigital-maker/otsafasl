@@ -81,6 +81,26 @@ const PatientProfilePage = () => {
           <Button variant="outline" size="sm" onClick={exportPDF} className="gap-2">
             <FileDown className="w-4 h-4" /> ייצוא PDF
           </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-2 text-destructive">
+                <Trash2 className="w-4 h-4" /> מחיקת מטופל
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent dir="rtl">
+              <AlertDialogHeader>
+                <AlertDialogTitle>מחיקת מטופל</AlertDialogTitle>
+                <AlertDialogDescription>
+                  האם למחוק את {p.full_name}? המטופל יוסר מרשימת המטופלים.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>ביטול</AlertDialogCancel>
+                <AlertDialogAction onClick={remove} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">מחק</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
         </CardHeader>
       </Card>
 
