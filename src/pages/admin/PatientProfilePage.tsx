@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
-import { useParams, useSearchParams, Link } from "react-router-dom";
+import { useParams, useSearchParams, Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowRight, User, FileDown } from "lucide-react";
+import { ArrowRight, User, FileDown, Trash2 } from "lucide-react";
 import { InfoTab } from "@/components/admin/patient/InfoTab";
 import { TimelineTab } from "@/components/admin/patient/TimelineTab";
 import { AppointmentsTab } from "@/components/admin/patient/AppointmentsTab";
@@ -14,6 +18,7 @@ import { FilesTab } from "@/components/admin/patient/FilesTab";
 import { NotesTab } from "@/components/admin/patient/NotesTab";
 import { generatePatientHistoryPDF } from "@/lib/pdf/patientHistory";
 import { useToast } from "@/hooks/use-toast";
+
 
 export interface Patient {
   id: string; full_name: string; national_id: string | null; phone: string | null;
@@ -27,8 +32,18 @@ const PatientProfilePage = () => {
   const [sp] = useSearchParams();
   const initialTab = sp.get("tab") ?? "timeline";
   const { toast } = useToast();
+  const nav = useNavigate();
   const [p, setP] = useState<Patient | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const remove = async () => {
+    if (!p) return;
+    const { error } = await supabase.from("patients").update({ deleted_at: new Date().toISOString() }).eq("id", p.id);
+    if (error) return toast({ title: "שגיאה", description: error.message, variant: "destructive" });
+    toast({ title: "המטופל נמחק" });
+    nav("/admin/patients");
+  };
+
 
   const exportPDF = async () => {
     if (!p) return;
@@ -76,6 +91,26 @@ const PatientProfilePage = () => {
           <Button variant="outline" size="sm" onClick={exportPDF} className="gap-2">
             <FileDown className="w-4 h-4" /> ייצוא PDF
           </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-2 text-destructive">
+                <Trash2 className="w-4 h-4" /> מחיקת מטופל
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent dir="rtl">
+              <AlertDialogHeader>
+                <AlertDialogTitle>מחיקת מטופל</AlertDialogTitle>
+                <AlertDialogDescription>
+                  האם למחוק את {p.full_name}? המטופל יוסר מרשימת המטופלים.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>ביטול</AlertDialogCancel>
+                <AlertDialogAction onClick={remove} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">מחק</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
         </CardHeader>
       </Card>
 
