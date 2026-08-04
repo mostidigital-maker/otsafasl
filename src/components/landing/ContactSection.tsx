@@ -121,16 +121,35 @@ export const ContactSection = () => {
                 </div>
                 <h3 className="text-xl font-bold text-foreground">{t.contact.hoursTitle}</h3>
               </div>
-              <div className="space-y-4">
-                {workingHours.map((item) => (
-                  <div key={item.day} className="flex justify-between items-center py-3 border-b border-border/50 last:border-0">
-                    <span className="text-foreground font-medium">{item.day}</span>
-                    <span className={`${item.hours === t.contact.closed ? "text-destructive" : "text-muted-foreground"}`}>
-                      {item.hours}
-                    </span>
-                  </div>
-                ))}
-              </div>
+              {hoursByLocation.length === 0 ? (
+                <div className="space-y-4">
+                  {fallbackHours.map((item) => (
+                    <div key={item.day} className="flex justify-between items-center py-3 border-b border-border/50 last:border-0">
+                      <span className="text-foreground font-medium">{item.day}</span>
+                      <span className={item.hours === t.contact.closed ? "text-destructive" : "text-muted-foreground"}>{item.hours}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {hoursByLocation.map((group) => (
+                    <div key={group.location}>
+                      <div className="flex items-center gap-2 mb-2">
+                        <MapPin className="w-4 h-4 text-secondary" />
+                        <span className="font-semibold text-foreground">{group.location}</span>
+                      </div>
+                      <div className="space-y-2">
+                        {group.rows.map((item) => (
+                          <div key={item.day} className="flex justify-between items-center py-2 border-b border-border/50 last:border-0">
+                            <span className="text-foreground font-medium">{item.day}</span>
+                            <span className={item.hours === t.contact.closed ? "text-destructive" : "text-muted-foreground"} dir="ltr">{item.hours}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="bg-card rounded-2xl p-6 md:p-8 border border-border/50 shadow-soft">
