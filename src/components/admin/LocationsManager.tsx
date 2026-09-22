@@ -83,7 +83,7 @@ export const LocationsManager = () => {
           ...payload,
           slug: slugify(form.name_en || form.name_he),
           is_active: true,
-          sort_order: (locs.at(-1)?.sort_order ?? 0) + 1,
+          sort_order: (locs.length ? locs[locs.length - 1].sort_order : 0) + 1,
         });
     setSaving(false);
     if (error) return toast({ title: "שגיאה", description: error.message, variant: "destructive" });
