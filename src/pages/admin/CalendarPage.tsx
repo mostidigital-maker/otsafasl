@@ -81,8 +81,11 @@ const CalendarPage = () => {
   const setStatus = async (id: string, status: Status) => {
     const { error } = await supabase.from("appointments").update({ status }).eq("id", id);
     if (error) return toast({ title: "שגיאה", description: error.message, variant: "destructive" });
-    toast({ title: "עודכן" });
+    toast({ title: status === "confirmed" ? "התור אושר" : "עודכן" });
     setRows(prev => prev.map(r => r.id === id ? { ...r, status } : r));
+    if (status === "confirmed") {
+      supabase.functions.invoke("notify-appointment", { body: { appointment_id: id, kind: "confirmed" } }).catch(() => {});
+    }
   };
 
   const removeAppointment = async (id: string) => {
@@ -165,6 +168,16 @@ const CalendarPage = () => {
                   {a.parent_name} · <span dir="ltr">{a.phone}</span> · {locMap[a.location_id] ?? ""}
                 </div>
                 <div className="flex flex-wrap gap-1 pt-1">
+                  {a.status === "pending" && (
+                    <Button size="sm" className="h-7 text-xs gap-1" onClick={() => setStatus(a.id, "confirmed")}>
+                      <CheckCircle2 className="w-3 h-3" /> אישור תור
+                    </Button>
+                  )}
+                  {(a.status === "pending" || a.status === "confirmed") && (
+                    <Button size="sm" variant="outline" className="h-7 text-xs gap-1" onClick={() => setStatus(a.id, "cancelled")}>
+                      <XCircle className="w-3 h-3" /> ביטול
+                    </Button>
+                  )}
                   <Button size="sm" variant="outline" className="h-7 text-xs gap-1" onClick={() => setStatus(a.id, "arrived")}>
                     <UserCheck className="w-3 h-3" /> הגיע
                   </Button>
