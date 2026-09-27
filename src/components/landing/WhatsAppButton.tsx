@@ -1,13 +1,15 @@
 import { MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 export const WhatsAppButton = () => {
   const { t, dir } = useLanguage();
+  const site = useSiteSettings();
 
   const openWhatsApp = () => {
     const message = encodeURIComponent(t.common.whatsappMessage);
-    window.open(`https://wa.me/972505772680?text=${message}`, "_blank");
+    window.open(`https://wa.me/${site.whatsapp_number}?text=${message}`, "_blank");
   };
 
   return (
