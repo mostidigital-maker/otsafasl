@@ -4,7 +4,29 @@ import { Phone, MessageCircle, Clock, MapPin, Mail } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
-...
+
+interface Loc { id: string; name_ar: string; name_he: string; name_en: string; sort_order: number }
+interface WH { location_id: string; weekday: number; opens_at: string; closes_at: string }
+
+export const ContactSection = () => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const { t, lang } = useLanguage();
+  const [locs, setLocs] = useState<Loc[]>([]);
+  const [hours, setHours] = useState<WH[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const [l, h] = await Promise.all([
+        supabase.from("locations").select("*").eq("is_active", true).order("sort_order"),
+        supabase.from("working_hours").select("location_id,weekday,opens_at,closes_at").eq("is_active", true).order("weekday"),
+      ]);
+      setLocs((l.data ?? []) as Loc[]);
+      setHours((h.data ?? []) as WH[]);
+    })();
+  }, []);
+
+  const whatsappMessage = encodeURIComponent(t.common.whatsappMessage);
   const site = useSiteSettings();
 
   const contactInfo = [
