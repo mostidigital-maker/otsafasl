@@ -3,34 +3,14 @@ import { useEffect, useRef, useState } from "react";
 import { Phone, MessageCircle, Clock, MapPin, Mail } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
-
-interface Loc { id: string; name_ar: string; name_he: string; name_en: string; sort_order: number }
-interface WH { location_id: string; weekday: number; opens_at: string; closes_at: string }
-
-export const ContactSection = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const { t, lang } = useLanguage();
-  const [locs, setLocs] = useState<Loc[]>([]);
-  const [hours, setHours] = useState<WH[]>([]);
-
-  useEffect(() => {
-    (async () => {
-      const [l, h] = await Promise.all([
-        supabase.from("locations").select("*").eq("is_active", true).order("sort_order"),
-        supabase.from("working_hours").select("location_id,weekday,opens_at,closes_at").eq("is_active", true).order("weekday"),
-      ]);
-      setLocs((l.data ?? []) as Loc[]);
-      setHours((h.data ?? []) as WH[]);
-    })();
-  }, []);
-
-  const whatsappMessage = encodeURIComponent(t.common.whatsappMessage);
+import { useSiteSettings } from "@/hooks/useSiteSettings";
+...
+  const site = useSiteSettings();
 
   const contactInfo = [
-    { icon: Phone, label: t.contact.phoneLabel, value: "050-577-2680", href: "tel:+972505772680", isWhatsApp: false },
-    { icon: MessageCircle, label: t.contact.whatsappLabel, value: t.contact.whatsappValue, href: `https://wa.me/972505772680?text=${whatsappMessage}`, isWhatsApp: true },
-    { icon: Mail, label: t.contact.emailLabel, value: "info@ot-clinic.com", href: "mailto:info@ot-clinic.com", isWhatsApp: false },
+    { icon: Phone, label: t.contact.phoneLabel, value: site.phone_display, href: `tel:${site.phone_tel}`, isWhatsApp: false },
+    { icon: MessageCircle, label: t.contact.whatsappLabel, value: t.contact.whatsappValue, href: `https://wa.me/${site.whatsapp_number}?text=${whatsappMessage}`, isWhatsApp: true },
+    { icon: Mail, label: t.contact.emailLabel, value: site.contact_email, href: `mailto:${site.contact_email}`, isWhatsApp: false },
   ];
 
   const fallbackHours = [

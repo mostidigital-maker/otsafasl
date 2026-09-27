@@ -1,10 +1,12 @@
 import { motion } from "framer-motion";
 import { Heart, Phone, MessageCircle } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
   const { t } = useLanguage();
+  const site = useSiteSettings();
 
   return (
     <footer className="bg-foreground text-primary-foreground py-12">
@@ -36,10 +38,10 @@ export const Footer = () => {
           <div className="text-center md:text-end">
             <h4 className="font-semibold mb-4">{t.footer.contactUs}</h4>
             <div className="flex justify-center md:justify-end gap-4">
-              <a href="tel:+972505772680" className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-primary-foreground/20 transition-colors">
+              <a href={`tel:${site.phone_tel}`} className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-primary-foreground/20 transition-colors">
                 <Phone className="w-5 h-5" />
               </a>
-              <a href="https://wa.me/972505772680" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-accent flex items-center justify-center hover:bg-accent/90 transition-colors">
+              <a href={`https://wa.me/${site.whatsapp_number}`} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-accent flex items-center justify-center hover:bg-accent/90 transition-colors">
                 <MessageCircle className="w-5 h-5 text-accent-foreground" />
               </a>
             </div>
