@@ -13,6 +13,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { WorkingHoursManager } from "@/components/admin/WorkingHoursManager";
 import { BlockedSlotsManager } from "@/components/admin/BlockedSlotsManager";
 import { LocationsManager } from "@/components/admin/LocationsManager";
+import { ContactSettingsManager } from "@/components/admin/ContactSettingsManager";
 
 interface Therapist {
   id: string; full_name: string; title: string | null;
@@ -74,7 +75,15 @@ const SettingsPage = () => {
           <TabsTrigger value="locations">מקומות</TabsTrigger>
           <TabsTrigger value="blocked">חסימת תורים</TabsTrigger>
           <TabsTrigger value="team">מטפלים</TabsTrigger>
+          <TabsTrigger value="contact">פרטי קשר באתר</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="contact" className="mt-6">
+          <Card>
+            <CardHeader><CardTitle className="text-base">טלפון, וואטסאפ ואימייל המוצגים באתר</CardTitle></CardHeader>
+            <CardContent><ContactSettingsManager /></CardContent>
+          </Card>
+        </TabsContent>
 
         <TabsContent value="hours" className="mt-6">
           <Card>
