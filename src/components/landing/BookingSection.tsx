@@ -79,7 +79,7 @@ export const BookingSection = () => {
       return;
     }
     setSubmitting(true);
-    const { error } = await supabase.from("appointments").insert({
+    const { data: inserted, error } = await supabase.from("appointments").insert({
       location_id: locationId,
       slot_at: selectedSlot.iso,
       child_name: form.childName.trim(),
@@ -89,7 +89,7 @@ export const BookingSection = () => {
       phone: form.phone.trim(),
       email: form.email.trim() || null,
       language: lang,
-    });
+    }).select("id").single();
     setSubmitting(false);
     if (error) {
       if (error.code === "23505") {
@@ -101,14 +101,7 @@ export const BookingSection = () => {
       return;
     }
     // Fire-and-forget email notification (edge function looks up by slot+phone)
-    supabase.functions.invoke("notify-appointment", {
-      body: {
-        kind: "received",
-        slot_at: selectedSlot.iso,
-        location_id: locationId,
-        phone: form.phone.trim(),
-      },
-    }).catch(() => {});
+  if (inserted) supabase.functions.invoke("notify-appointment", { body: { appointment_id: inserted.id, kind: "new" } }).catch(() => {});
     setDone(true);
   };
 
