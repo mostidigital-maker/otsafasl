@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Search, User, Pencil, Trash2 } from "lucide-react";
+import { Plus, Search, User, Pencil, Trash2, Download } from "lucide-react";
 
 type Gender = "male" | "female" | "other";
 interface Patient {
@@ -56,6 +56,21 @@ const PatientsPage = () => {
     const s = q.trim().toLowerCase();
     return [r.full_name, r.national_id, r.phone, r.parent_name].some((x) => x?.toLowerCase().includes(s));
   });
+
+  const exportCsv = () => {
+    const esc = (v: unknown) => {
+      const t = String(v ?? "");
+      const safe = /^[=+\-@]/.test(t) ? "'" + t : t; // avoid spreadsheet formula injection
+      return `"${safe.replace(/"/g, '""')}"`;
+    };
+    const head = ["שם מלא", "ת.ז", "טלפון", "הורה", "אימייל", "תאריך לידה"];
+    const lines = [head.map(esc).join(","), ...filtered.map((r) => [r.full_name, r.national_id, r.phone, r.parent_name, r.email, r.date_of_birth].map(esc).join(","))];
+    const blob = new Blob(["\uFEFF" + lines.join("\n")], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = `patients-${new Date().toISOString().slice(0, 10)}.csv`; a.click();
+    URL.revokeObjectURL(url);
+  };
 
   const openNew = () => { setEditId(null); setForm(emptyForm); setOpen(true); };
   const openEdit = (r: Patient) => {
@@ -114,7 +129,10 @@ const PatientsPage = () => {
           <h1 className="text-2xl font-bold">מטופלים</h1>
           <p className="text-muted-foreground text-sm">ניהול פרופילי המטופלים</p>
         </div>
-        <Button className="gap-2" onClick={openNew}><Plus className="w-4 h-4" /> מטופל חדש</Button>
+        <div className="flex gap-2">
+          <Button variant="outline" className="gap-2" onClick={exportCsv}><Download className="w-4 h-4" /> ייצוא CSV</Button>
+          <Button className="gap-2" onClick={openNew}><Plus className="w-4 h-4" /> מטופל חדש</Button>
+        </div>
         <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) setEditId(null); }}>
           <DialogContent className="max-w-2xl" dir="rtl">
             <DialogHeader><DialogTitle>{editId ? "עריכת מטופל" : "מטופל חדש"}</DialogTitle></DialogHeader>
