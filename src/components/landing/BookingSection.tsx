@@ -35,6 +35,9 @@ export const BookingSection = () => {
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const [form, setForm] = useState({ childName: "", childAge: "", childNationalId: "", parentName: "", phone: "", email: "" });
+  const [consent, setConsent] = useState(false);
+  const [website, setWebsite] = useState(""); // honeypot: real users never fill this
+  const startedAt = useRef(Date.now());
 
   useEffect(() => {
     supabase.from("locations").select("*").eq("is_active", true).order("sort_order").then(({ data }) => {
@@ -58,10 +61,13 @@ export const BookingSection = () => {
   const reset = () => {
     setStep(1); setLocationId(null); setSelectedDate(undefined); setSelectedSlot(null);
     setForm({ childName: "", childAge: "", childNationalId: "", parentName: "", phone: "", email: "" });
+    setConsent(false);
     setDone(false);
   };
 
   const submit = async () => {
+    // Bot guard: filled honeypot or impossibly fast submit -> pretend success, do nothing.
+    if (website || Date.now() - startedAt.current < 4000) { setDone(true); return; }
     if (!form.childName || !form.childNationalId || !form.parentName || !form.phone || !selectedSlot || !locationId) {
       toast({ title: t.booking.errorTitle, description: t.booking.errorRequired, variant: "destructive" });
       return;
@@ -78,8 +84,15 @@ export const BookingSection = () => {
       toast({ title: t.booking.errorEmailTitle, description: t.booking.errorEmailDesc, variant: "destructive" });
       return;
     }
+    if (!consent) {
+      toast({ title: t.booking.errorTitle, description: t.booking.errorConsent, variant: "destructive" });
+      return;
+    }
     setSubmitting(true);
-    const { data: inserted, error } = await supabase.from("appointments").insert({
+    // Generated client-side: anonymous users cannot SELECT/RETURN the row (RLS), so we pass our own id.
+    const appointmentId = crypto.randomUUID();
+    const { error } = await supabase.from("appointments").insert({
+      id: appointmentId,
       location_id: locationId,
       slot_at: selectedSlot.iso,
       child_name: form.childName.trim(),
@@ -89,19 +102,23 @@ export const BookingSection = () => {
       phone: form.phone.trim(),
       email: form.email.trim() || null,
       language: lang,
-    }).select("id").single();
+    });
     setSubmitting(false);
     if (error) {
       if (error.code === "23505") {
         toast({ title: t.booking.errorSlotTitle, description: t.booking.errorSlotDesc, variant: "destructive" });
         setStep(3); setSelectedSlot(null);
+      } else if (error.message?.includes("too_many_bookings")) {
+        toast({ title: t.booking.errorTitle, description: t.booking.errorTooMany, variant: "destructive" });
       } else {
         toast({ title: t.booking.errorTitle, description: error.message, variant: "destructive" });
       }
       return;
     }
-    // Fire-and-forget email notification (edge function looks up by slot+phone)
-  if (inserted) supabase.functions.invoke("notify-appointment", { body: { appointment_id: inserted.id, kind: "new" } }).catch(() => {});
+    // Fire-and-forget email notification
+    supabase.functions.invoke("notify-appointment", {
+      body: { appointment_id: appointmentId, kind: "new" },
+    }).catch(() => {});
     setDone(true);
   };
 
@@ -324,6 +341,15 @@ export const BookingSection = () => {
                   <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder={t.booking.emailPh} maxLength={255} dir="ltr" />
                 </div>
               </div>
+
+              <div aria-hidden="true" style={{ position: "absolute", opacity: 0, height: 0, width: 0, overflow: "hidden", pointerEvents: "none" }}>
+                <label>Website<input type="text" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} /></label>
+              </div>
+
+              <label className="flex items-start gap-2 text-sm cursor-pointer">
+                <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-1" />
+                <span>{t.booking.consentLabel} *</span>
+              </label>
 
               <p className="text-sm text-muted-foreground text-center">{t.booking.callbackNote}</p>
 
