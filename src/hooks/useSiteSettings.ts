@@ -6,6 +6,7 @@ export interface SiteSettings {
   phone_tel: string;
   whatsapp_number: string;
   contact_email: string;
+  experience_years: string;
 }
 
 const defaults: SiteSettings = {
@@ -13,6 +14,7 @@ const defaults: SiteSettings = {
   phone_tel: "+972505772680",
   whatsapp_number: "972505772680",
   contact_email: "info@ot-clinic.com",
+  experience_years: "10",
 };
 
 export const useSiteSettings = () => {

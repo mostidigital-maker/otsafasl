@@ -2,6 +2,7 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { Award, Clock, Heart, Shield, Users, Sparkles } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 const icons = [Award, Heart, Shield, Users, Clock, Sparkles];
 const colors = ["primary", "secondary", "accent", "primary", "secondary", "accent"] as const;
@@ -14,7 +15,13 @@ const colorVariants: Record<string, string> = {
 export const WhyUsSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const site = useSiteSettings();
+  const experienceTitle = lang === "ar"
+    ? `خبرة أكثر من ${site.experience_years} سنوات`
+    : lang === "he"
+      ? `מעל ${site.experience_years} שנות ניסיון`
+      : `${site.experience_years}+ years of experience`;
 
   return (
     <section id="why-us" className="py-20 md:py-32 bg-background relative overflow-hidden">
@@ -50,7 +57,7 @@ export const WhyUsSection = () => {
                   <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-5 transition-all duration-300 ${colorVariants[colors[index]]}`}>
                     <Icon className="w-7 h-7" />
                   </div>
-                  <h3 className="text-xl font-bold text-foreground mb-3">{feature.title}</h3>
+                  <h3 className="text-xl font-bold text-foreground mb-3">{index === 0 ? experienceTitle : feature.title}</h3>
                   <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
                 </div>
               </motion.div>
