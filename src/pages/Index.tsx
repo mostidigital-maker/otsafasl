@@ -22,10 +22,21 @@ const Index = () => {
       : lang === "he"
         ? `מרפאת ריפוי בעיסוק לילדים | מעל ${site.experience_years} שנות ניסיון`
         : `Pediatric Occupational Therapy Clinic | Over ${site.experience_years} years of experience`;
+    const description = lang === "ar"
+      ? `عيادة متخصصة في العلاج الوظيفي للأطفال بخبرة أكثر من ${site.experience_years} سنوات. رعاية شخصية لتحسين المهارات الحركية والتعليمية حتى سن 18، بالتعاون مع كلاليت. احجز موعدك الآن.`
+      : lang === "he"
+        ? `מרפאת ריפוי בעיסוק לילדים עם מעל ${site.experience_years} שנות ניסיון. טיפול מקצועי עד גיל 18, בשיתוף כללית. הזמינו תור עכשיו.`
+        : `Pediatric occupational therapy clinic with over ${site.experience_years} years of experience. Specialized care up to age 18, partnered with Clalit. Book your appointment now.`;
+    const setMeta = (selector: string, value: string) => {
+      document.querySelector(selector)?.setAttribute("content", value);
+    };
     document.title = title;
-    document.querySelector('meta[name="title"]')?.setAttribute("content", title);
-    document.querySelector('meta[property="og:title"]')?.setAttribute("content", title);
-    document.querySelector('meta[name="twitter:title"]')?.setAttribute("content", title);
+    setMeta('meta[name="title"]', title);
+    setMeta('meta[name="description"]', description);
+    setMeta('meta[property="og:title"]', title);
+    setMeta('meta[property="og:description"]', description);
+    setMeta('meta[name="twitter:title"]', title);
+    setMeta('meta[name="twitter:description"]', description);
   }, [lang, site.experience_years]);
 
   return (
