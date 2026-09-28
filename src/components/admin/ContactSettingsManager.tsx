@@ -21,7 +21,7 @@ export const ContactSettingsManager = () => {
 
   const load = async () => {
     const { data } = await supabase.from("site_settings").select("key, value");
-    const map: Record<string, string> = {};
+    const map: Record<string, string> = { experience_years: "10" };
     for (const row of (data ?? []) as { key: string; value: string }[]) map[row.key] = row.value;
     setValues(map);
   };
