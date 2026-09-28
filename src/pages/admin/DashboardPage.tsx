@@ -10,7 +10,7 @@ import {
 import { format, subMonths, startOfMonth, endOfMonth } from "date-fns";
 
 interface Stats {
-  patients: number; todayAppts: number; upcoming: number; pendingReminders: number;
+  patients: number; todayAppts: number; upcoming: number; pendingReminders: number; pendingAppts: number;
   monthIncome: number; outstanding: number;
 }
 interface Activity { id: number | string; action: string; table_name: string; created_at: string; }
@@ -30,7 +30,7 @@ const STATUS_LABELS: Record<string, string> = {
 
 const DashboardPage = () => {
   const [s, setS] = useState<Stats>({
-    patients: 0, todayAppts: 0, upcoming: 0, pendingReminders: 0, monthIncome: 0, outstanding: 0,
+    patients: 0, todayAppts: 0, upcoming: 0, pendingReminders: 0, pendingAppts: 0, monthIncome: 0, outstanding: 0,
   });
   const [statusData, setStatusData] = useState<{ name: string; value: number; key: string }[]>([]);
   const [monthly, setMonthly] = useState<{ month: string; income: number }[]>([]);
@@ -88,6 +88,7 @@ const DashboardPage = () => {
         todayAppts: tApp.count ?? 0,
         upcoming: upApp.count ?? 0,
         pendingReminders: rem.count ?? 0,
+        pendingAppts: counts["pending"] ?? 0,
         monthIncome, outstanding,
       });
       setActivity((log.data ?? []) as Activity[]);
@@ -95,6 +96,7 @@ const DashboardPage = () => {
   }, []);
 
   const cards = [
+    { label: "ממתינים לאישור", value: s.pendingAppts, icon: Calendar, color: "text-destructive", to: "/admin/calendar" },
     { label: "מטופלים פעילים", value: s.patients, icon: Users, color: "text-primary", to: "/admin/patients" },
     { label: "תורים היום", value: s.todayAppts, icon: Calendar, color: "text-accent", to: "/admin/calendar" },
     { label: "תורים עתידיים", value: s.upcoming, icon: Calendar, color: "text-secondary", to: "/admin/calendar" },
