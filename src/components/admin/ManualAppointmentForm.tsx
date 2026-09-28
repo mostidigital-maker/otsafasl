@@ -32,7 +32,7 @@ export const ManualAppointmentForm = () => {
       return;
     }
     setSubmitting(true);
-    const { error } = await supabase.from("appointments").insert({
+    const { data: created, error } = await supabase.from("appointments").insert({
       location_id: form.location_id,
       slot_at: new Date(form.slot_at).toISOString(),
       child_name: form.child_name.trim(),
@@ -45,9 +45,13 @@ export const ManualAppointmentForm = () => {
       notes: form.notes || null,
       status: "confirmed",
       created_by_admin: true,
-    });
+    }).select("id").single();
     setSubmitting(false);
     if (error) return toast({ title: "Error", description: error.message, variant: "destructive" });
+    // Staff can read the row back, so send the confirmation email (if an address was entered).
+    if (created?.id && form.email.trim()) {
+      supabase.functions.invoke("notify-appointment", { body: { appointment_id: created.id, kind: "confirmed" } }).catch(() => {});
+    }
     toast({ title: t.admin.whSaved });
     setForm({ ...form, slot_at: "", child_name: "", child_age: "", child_national_id: "", parent_name: "", phone: "", email: "", notes: "" });
   };
