@@ -13,6 +13,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
+const waLink = (raw: string) => {
+  const d = raw.replace(/\D/g, "");
+  const n = d.startsWith("972") ? d : d.startsWith("0") ? "972" + d.slice(1) : d;
+  return `https://wa.me/${n}`;
+};
+
 type Status = "pending" | "confirmed" | "cancelled" | "arrived" | "completed" | "no_show";
 
 interface Appointment {
@@ -165,7 +171,7 @@ const CalendarPage = () => {
                   {a.child_name}{a.child_age ? ` (${a.child_age})` : ""}
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  {a.parent_name} · <span dir="ltr">{a.phone}</span> · {locMap[a.location_id] ?? ""}
+                  {a.parent_name} · <span dir="ltr">{a.phone}</span> · <a href={waLink(a.phone)} target="_blank" rel="noreferrer" className="text-green-600 underline">וואטסאפ</a> · {locMap[a.location_id] ?? ""}
                 </div>
                 <div className="flex flex-wrap gap-1 pt-1">
                   {a.status === "pending" && (
@@ -307,7 +313,7 @@ const DayList = ({ day, items, locMap, onOpen }: {
             <div dir="ltr" className="font-bold text-lg w-16">{format(new Date(a.slot_at), "HH:mm")}</div>
             <div>
               <div className="font-medium">{a.child_name}</div>
-              <div className="text-xs text-muted-foreground">{a.parent_name} · <span dir="ltr">{a.phone}</span> · {locMap[a.location_id] ?? ""}</div>
+              <div className="text-xs text-muted-foreground">{a.parent_name} · <span dir="ltr">{a.phone}</span> · <a href={waLink(a.phone)} target="_blank" rel="noreferrer" className="text-green-600 underline">וואטסאפ</a> · {locMap[a.location_id] ?? ""}</div>
             </div>
           </div>
           <Badge variant="outline" className="text-[10px]">{statusMeta[a.status].label}</Badge>
