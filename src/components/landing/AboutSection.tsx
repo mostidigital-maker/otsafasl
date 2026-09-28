@@ -2,6 +2,7 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { Brain, Hand, BookOpen, Users } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 const icons = [Hand, Brain, BookOpen, Users];
 
@@ -9,6 +10,7 @@ export const AboutSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const { t } = useLanguage();
+  const site = useSiteSettings();
 
   return (
     <section id="about" className="py-20 md:py-32 bg-card relative overflow-hidden">
@@ -65,7 +67,7 @@ export const AboutSection = () => {
               {t.about.stats.map((stat, i) => (
                 <div key={i} className="bg-card rounded-2xl p-5 text-center shadow-soft">
                   <p className={`text-3xl font-bold ${i === 0 ? "text-primary" : i === 1 ? "text-secondary" : i === 2 ? "text-accent" : "text-foreground"}`}>
-                    {stat.value}
+                    {i === 0 ? `${site.experience_years}+` : stat.value}
                   </p>
                   <p className="text-sm text-muted-foreground mt-1">{stat.label}</p>
                 </div>

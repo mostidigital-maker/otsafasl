@@ -75,12 +75,12 @@ const SettingsPage = () => {
           <TabsTrigger value="locations">מקומות</TabsTrigger>
           <TabsTrigger value="blocked">חסימת תורים</TabsTrigger>
           <TabsTrigger value="team">מטפלים</TabsTrigger>
-          <TabsTrigger value="contact">פרטי קשר באתר</TabsTrigger>
+          <TabsTrigger value="contact">פרטי האתר</TabsTrigger>
         </TabsList>
 
         <TabsContent value="contact" className="mt-6">
           <Card>
-            <CardHeader><CardTitle className="text-base">טלפון, וואטסאפ ואימייל המוצגים באתר</CardTitle></CardHeader>
+            <CardHeader><CardTitle className="text-base">פרטי קשר ושנות ניסיון המוצגים באתר</CardTitle></CardHeader>
             <CardContent><ContactSettingsManager /></CardContent>
           </Card>
         </TabsContent>

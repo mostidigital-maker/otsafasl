@@ -3,9 +3,16 @@ import { MessageCircle, Calendar, Heart, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/hero-therapy.jpg";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 export const HeroSection = () => {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const site = useSiteSettings();
+  const experienceBadge = lang === "ar"
+    ? `خبرة أكثر من ${site.experience_years} سنوات`
+    : lang === "he"
+      ? `מעל ${site.experience_years} שנות ניסיון`
+      : `Over ${site.experience_years} years of experience`;
 
   const scrollToBooking = () => {
     document.querySelector("#booking")?.scrollIntoView({ behavior: "smooth" });
@@ -13,7 +20,7 @@ export const HeroSection = () => {
 
   const openWhatsApp = () => {
     const msg = encodeURIComponent(t.common.whatsappMessage);
-    window.open(`https://wa.me/972505772680?text=${msg}`, "_blank");
+    window.open(`https://wa.me/${site.whatsapp_number}?text=${msg}`, "_blank");
   };
 
   return (
@@ -39,7 +46,7 @@ export const HeroSection = () => {
               className="inline-flex items-center gap-2 bg-primary-soft text-primary px-4 py-2 rounded-full text-sm font-medium mb-6"
             >
               <Star className="w-4 h-4 fill-current" />
-              <span>{t.hero.badge}</span>
+              <span>{experienceBadge}</span>
             </motion.div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
