@@ -72,6 +72,10 @@ export const BookingSection = () => {
       toast({ title: t.booking.errorTitle, description: t.booking.errorRequired, variant: "destructive" });
       return;
     }
+    if (!/^[\u0590-\u05FF][\u0590-\u05FF\s'"-]*$/.test(form.childName.trim())) {
+      toast({ title: t.booking.errorChildNameHebrewTitle, description: t.booking.errorChildNameHebrewDesc, variant: "destructive" });
+      return;
+    }
     if (!/^\d{9}$/.test(form.childNationalId.trim())) {
       toast({ title: t.booking.errorNationalIdTitle, description: t.booking.errorNationalIdDesc, variant: "destructive" });
       return;
@@ -310,7 +314,16 @@ export const BookingSection = () => {
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>{t.booking.childName} *</Label>
-                  <Input value={form.childName} onChange={(e) => setForm({ ...form, childName: e.target.value })} placeholder={t.booking.childNamePh} maxLength={100} required />
+                  <Input
+                    value={form.childName}
+                    onChange={(e) => setForm({ ...form, childName: e.target.value })}
+                    placeholder={t.booking.childNamePh}
+                    maxLength={100}
+                    dir="rtl"
+                    className={cn(form.childName && !/^[\u0590-\u05FF][\u0590-\u05FF\s'"-]*$/.test(form.childName.trim()) && "border-destructive focus-visible:ring-destructive")}
+                    required
+                  />
+                  <p className="text-xs text-muted-foreground">{t.booking.childNameHebrewNote}</p>
                 </div>
                 <div className="space-y-2">
                   <Label>{t.booking.childAge}</Label>
