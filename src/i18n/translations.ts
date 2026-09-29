@@ -1,11 +1,11 @@
 export type Language = "ar" | "he" | "en";
-
+ 
 export const languages: { code: Language; label: string; dir: "rtl" | "ltr" }[] = [
   { code: "ar", label: "العربية", dir: "rtl" },
   { code: "he", label: "עברית", dir: "rtl" },
   { code: "en", label: "English", dir: "ltr" },
 ];
-
+ 
 const dict = {
   ar: {
     nav: { home: "الرئيسية", about: "عن العلاج الوظيفي", whyUs: "لماذا نحن؟", services: "خدماتنا", insurance: "التأمين الصحي", booking: "حجز موعد", contact: "تواصل معنا" },
@@ -66,7 +66,7 @@ const dict = {
       phone: "رقم الهاتف", phonePh: "05X-XXXXXXX",
       email: "البريد الإلكتروني (اختياري)", emailPh: "name@example.com",
       childNationalId: "رقم هوية الطفل", childNationalIdPh: "9 أرقام",
-      consentLabel: "أوافق على حفظ بياناتي وبيانات طفلي لدى العيادة لغرض تنسيق المواعيد والعلاج.", errorConsent: "يرجى الموافقة على حفظ البيانات للمتابعة", errorTooMany: "تم تجاوز عدد الحجوزات المسموح به. يرجى التواصل معنا هاتفياً.",
+      consentLabel: "أوافق على حفظ بياناتي وبيانات طفلي لدى العيادة لغرض تنسيق المواعيد والعلاج.", errorConsent: "يرجى الموافقة على حفظ البيانات للمتابعة", errorTooMany: "تم تجاوز عدد الحجوزات المسموح به. يرجى التواصل معنا هاتفياً.", childNameHebrewNote: "يجب كتابة اسم الطفل بالعبرية كما هو مسجل في الهوية", errorChildNameHebrewTitle: "اسم الطفل يجب أن يكون بالعبرية", errorChildNameHebrewDesc: "الرجاء إدخال اسم الطفل بالأحرف العبرية فقط، كما هو مسجل في الهوية.",
       errorNationalIdTitle: "رقم هوية غير صحيح", errorNationalIdDesc: "يرجى إدخال رقم هوية مكون من 9 أرقام",
       summary: "ملخص الحجز",
       submit: "تأكيد الحجز", submitting: "جاري الإرسال...",
@@ -103,7 +103,7 @@ const dict = {
       manualAdd: "إضافة موعد يدوي (للحجوزات الهاتفية)",
     },
   },
-
+ 
   he: {
     nav: { home: "דף הבית", about: "על ריפוי בעיסוק", whyUs: "למה אנחנו?", services: "השירותים שלנו", insurance: "ביטוח בריאות", booking: "קביעת תור", contact: "צור קשר" },
     common: { bookNow: "קבע תור", bookAppointmentNow: "קבע תור עכשיו", contactWhatsapp: "צור קשר בוואטסאפ", clinicName: "מרפאת ריפוי בעיסוק", forChildren: "לילדים", whatsappMessage: "שלום, אני רוצה לקבוע תור לריפוי בעיסוק", logoLetter: "ר" },
@@ -162,7 +162,7 @@ const dict = {
       phone: "מספר טלפון", phonePh: "05X-XXXXXXX",
       email: "אימייל (אופציונלי)", emailPh: "name@example.com",
       childNationalId: "ת.ז של הילד", childNationalIdPh: "9 ספרות",
-      consentLabel: "אני מסכים/ה לשמירת פרטיי ופרטי ילדי במרפאה לצורך תיאום תורים וטיפול.", errorConsent: "יש לאשר את שמירת הפרטים כדי להמשיך", errorTooMany: "חרגת ממספר ההזמנות המותר. אנא צור/י קשר טלפונית.",
+      consentLabel: "אני מסכים/ה לשמירת פרטיי ופרטי ילדי במרפאה לצורך תיאום תורים וטיפול.", errorConsent: "יש לאשר את שמירת הפרטים כדי להמשיך", errorTooMany: "חרגת ממספר ההזמנות המותר. אנא צור/י קשר טלפונית.", childNameHebrewNote: "יש לכתוב את שם הילד/ה בעברית, כפי שמופיע בתעודת הזהות", errorChildNameHebrewTitle: "שם הילד/ה חייב להיות בעברית", errorChildNameHebrewDesc: "נא להזין את שם הילד/ה באותיות עברית בלבד, כפי שמופיע בתעודת הזהות.",
       errorNationalIdTitle: "ת.ז לא תקינה", errorNationalIdDesc: "אנא הזן תעודת זהות בת 9 ספרות",
       summary: "סיכום הקביעה",
       submit: "אישור קביעה", submitting: "שולח...",
@@ -199,7 +199,7 @@ const dict = {
       manualAdd: "הוספת תור ידני (לקביעות טלפוניות)",
     },
   },
-
+ 
   en: {
     nav: { home: "Home", about: "About OT", whyUs: "Why Us?", services: "Services", insurance: "Health Insurance", booking: "Book", contact: "Contact" },
     common: { bookNow: "Book Now", bookAppointmentNow: "Book Your Appointment", contactWhatsapp: "Chat on WhatsApp", clinicName: "Occupational Therapy Clinic", forChildren: "For Children", whatsappMessage: "Hello, I'd like to book an occupational therapy appointment", logoLetter: "O" },
@@ -258,7 +258,7 @@ const dict = {
       phone: "Phone", phonePh: "05X-XXXXXXX",
       email: "Email (optional)", emailPh: "name@example.com",
       childNationalId: "Child's National ID", childNationalIdPh: "9 digits",
-      consentLabel: "I agree that the clinic stores my and my child's details to manage appointments and treatment.", errorConsent: "Please agree to data storage to continue", errorTooMany: "Booking limit exceeded. Please contact us by phone.",
+      consentLabel: "I agree that the clinic stores my and my child's details to manage appointments and treatment.", errorConsent: "Please agree to data storage to continue", errorTooMany: "Booking limit exceeded. Please contact us by phone.", childNameHebrewNote: "Please write the child's name in Hebrew, exactly as it appears on the ID card", errorChildNameHebrewTitle: "Child's name must be in Hebrew", errorChildNameHebrewDesc: "Please enter the child's name using Hebrew letters only, as it appears on the ID card.",
       errorNationalIdTitle: "Invalid National ID", errorNationalIdDesc: "Please enter a 9-digit national ID",
       summary: "Booking summary",
       submit: "Confirm booking", submitting: "Sending...",
@@ -296,6 +296,6 @@ const dict = {
     },
   },
 };
-
+ 
 export type TranslationShape = typeof dict.ar;
 export const translations: Record<Language, TranslationShape> = dict;
