@@ -84,7 +84,7 @@ export const InsuranceSection = () => {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="bg-background rounded-xl p-4 text-center">
-                      <p className="text-3xl font-bold text-primary">0-18</p>
+                      <p className="text-3xl font-bold text-primary">3–18</p>
                       <p className="text-xs text-muted-foreground">{t.insurance.ageGroupLabel}</p>
                     </div>
                     <div className="bg-background rounded-xl p-4 text-center">

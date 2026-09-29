@@ -31,7 +31,7 @@ const dict = {
       features: [
         { title: "خبرة أكثر من 10 سنوات", description: "نمتلك خبرة واسعة في علاج الأطفال" },
         { title: "نهج متخصص ومحب", description: "نتعامل مع كل طفل بحب ورعاية" },
-        { title: "تعاون مع كلاليت", description: "نعمل بالتعاون مع صندوق المرضى كلاليت للأطفال حتى 18 عامًا" },
+        { title: "تعاون مع كلاليت", description: "نعمل بالتعاون مع صندوق المرضى كلاليت للأطفال من عمر 3 حتى 18 عامًا" },
         { title: "متابعة شخصية", description: "نقدم برنامج علاجي مخصص ومتابعة مستمرة" },
         { title: "مواعيد مرنة", description: "نوفر مواعيد متنوعة تناسب جدول عائلتك" },
         { title: "بيئة علاجية محفزة", description: "عيادة مجهزة بأحدث الأدوات والألعاب العلاجية" },
@@ -47,7 +47,7 @@ const dict = {
     },
     insurance: { tag: "التأمين الصحي", titleStart: "العلاج ضمن اتفاقية مع", titleHighlight: "كلاليت مشلام", desc: "الأطفال المؤمنون في كلاليت مشلام قد يكونون مؤهلين للحصول على علاجات علاج وظيفي مقابل مشاركة ذاتية فقط، وفقًا لشروط الاستحقاق الخاصة بكلاليت.",
       coverage: ["عدد الجلسات حسب الاستحقاق والتوصية المهنية.", "الإحالة من طبيب أطفال مطلوبة."],
-      otherInsuranceTitle: "ليس لديك كلاليت مشلام؟", otherInsuranceDesc: "نعمل أيضًا بشكل خاص — تواصل معنا للتفاصيل.", coverageBadge: "تغطية معتمدة", ageRange: "للأطفال 0-18 سنة", ageGroupLabel: "الفئة العمرية", certifiedLabel: "معتمد رسميًا",
+      otherInsuranceTitle: "ليس لديك كلاليت مشلام؟", otherInsuranceDesc: "نعمل أيضًا بشكل خاص — تواصل معنا للتفاصيل.", coverageBadge: "تغطية معتمدة", ageRange: "للأطفال من 3 إلى 18 سنة", ageGroupLabel: "الفئة العمرية", certifiedLabel: "معتمد رسميًا",
     },
     booking: {
       tag: "حجز موعد", title: "احجز موعدك الآن", desc: "اختر المكان والتاريخ والوقت المناسب لك",
@@ -127,7 +127,7 @@ const dict = {
       features: [
         { title: "מעל 10 שנות ניסיון", description: "ניסיון רחב" },
         { title: "גישה מקצועית ואוהבת", description: "סביבה בטוחה ונעימה" },
-        { title: "שיתוף עם כללית", description: "ילדים עד גיל 18" },
+        { title: "שיתוף עם כללית", description: "ילדים מגיל 3 עד 18" },
         { title: "מעקב אישי", description: "תוכנית מותאמת" },
         { title: "שעות גמישות", description: "התאמה ללוח המשפחתי" },
         { title: "סביבה מעוררת", description: "כלים מתקדמים" },
@@ -143,7 +143,7 @@ const dict = {
     },
     insurance: { tag: "ביטוח בריאות", titleStart: "טיפול במסגרת הסכם עם", titleHighlight: "כללית מושלם", desc: "ילדים המבוטחים בכללית מושלם עשויים להיות זכאים לטיפולי ריפוי בעיסוק תמורת השתתפות עצמית בלבד, בהתאם לתנאי הזכאיות של כללית.",
       coverage: ["מספר טיפולים בהתאם לזכאיות והמלצה מקצועית", "נדרשת הפניה מרופא ילדים"],
-      otherInsuranceTitle: "אין לכם כללית מושלם?", otherInsuranceDesc: "אנו עובדים גם באופן פרטי — צרו קשר לפרטים.", coverageBadge: "כיסוי מוכר", ageRange: "0-18", ageGroupLabel: "טווח גילאים", certifiedLabel: "מוכר רשמית",
+      otherInsuranceTitle: "אין לכם כללית מושלם?", otherInsuranceDesc: "אנו עובדים גם באופן פרטי — צרו קשר לפרטים.", coverageBadge: "כיסוי מוכר", ageRange: "ילדים בגילאי 3–18", ageGroupLabel: "טווח גילאים", certifiedLabel: "מוכר רשמית",
     },
     booking: {
       tag: "קביעת תור", title: "קבע את התור שלך", desc: "בחר מיקום, תאריך ושעה שמתאימים לך",
@@ -223,7 +223,7 @@ const dict = {
       features: [
         { title: "10+ years of experience", description: "Extensive experience" },
         { title: "Caring approach", description: "Safe, comfortable environment" },
-        { title: "Partnership with Clalit", description: "Children up to age 18" },
+        { title: "Partnership with Clalit", description: "Children ages 3–18" },
         { title: "Personal follow-up", description: "Customized plans" },
         { title: "Flexible scheduling", description: "Fits your family" },
         { title: "Stimulating environment", description: "Latest tools" },
@@ -239,7 +239,7 @@ const dict = {
     },
     insurance: { tag: "Health Insurance", titleStart: "Treatment under agreement with", titleHighlight: "Clalit Mushlam", desc: "Children insured with Clalit Mushlam may be eligible for occupational therapy treatments for a self-participation fee only, according to Clalit's eligibility terms.",
       coverage: ["Number of sessions according to eligibility and professional recommendation", "Referral from a pediatrician is required"],
-      otherInsuranceTitle: "Not on Clalit Mushlam?", otherInsuranceDesc: "We also work privately — contact us for details.", coverageBadge: "Approved coverage", ageRange: "Children 0-18", ageGroupLabel: "Age group", certifiedLabel: "Officially certified",
+      otherInsuranceTitle: "Not on Clalit Mushlam?", otherInsuranceDesc: "We also work privately — contact us for details.", coverageBadge: "Approved coverage", ageRange: "Children ages 3–18", ageGroupLabel: "Age group", certifiedLabel: "Officially certified",
     },
     booking: {
       tag: "Book an Appointment", title: "Book your appointment", desc: "Pick a location, date and time",
