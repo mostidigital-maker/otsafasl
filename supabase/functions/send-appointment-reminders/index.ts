@@ -1,4 +1,3 @@
-
 // Meant to run once a day (via pg_cron / Supabase scheduled trigger).
 // Emails everyone with a *confirmed* appointment tomorrow, using the
 // 'appointment_reminder' template, and marks reminder_sent_at so it
@@ -8,6 +7,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')!;
 const FROM_EMAIL = Deno.env.get('NOTIFY_FROM_EMAIL')!;
 const FROM_NAME = Deno.env.get('NOTIFY_FROM_NAME') ?? 'המרפאה';
+// Optional: replies from parents go to the clinic inbox, e.g. info@otsafa.com
+const REPLY_TO = Deno.env.get('NOTIFY_REPLY_TO');
  
 function fillTemplate(text: string, data: Record<string, string>) {
   return text.replace(/{{\s*(\w+)\s*}}/g, (_, key) => data[key] ?? '');
@@ -17,7 +18,7 @@ async function sendEmail(to: string, subject: string, html: string) {
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: `${FROM_NAME} <${FROM_EMAIL}>`, to: [to], subject, html }),
+    body: JSON.stringify({ from: `${FROM_NAME} <${FROM_EMAIL}>`, to: [to], subject, html, ...(REPLY_TO ? { reply_to: REPLY_TO } : {}) }),
   });
   if (!res.ok) throw new Error(`Resend error ${res.status}: ${await res.text()}`);
 }
