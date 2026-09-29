@@ -203,7 +203,7 @@ export const BookingSection = () => {
     </Button>
   );
 
-  const minDate = new Date(); minDate.setDate(minDate.getDate() + 1);
+  const minDate = new Date(); minDate.setHours(0, 0, 0, 0); // today, not tomorrow — availableDates already filters out days with no bookable slots left
   const maxDate = new Date(); maxDate.setMonth(maxDate.getMonth() + 1);
 
   return (
