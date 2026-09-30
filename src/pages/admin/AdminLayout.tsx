@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { NavLink, Outlet, useNavigate, useLocation } from "react-router-dom";
+import { NavLink, Outlet, useNavigate, useLocation, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import GlobalSearch from "@/components/admin/GlobalSearch";
 import NotificationsBell from "@/components/admin/NotificationsBell";
+import { LanguageSwitcher } from "@/components/landing/LanguageSwitcher";
 import {
   LayoutDashboard, Users, Calendar, ClipboardList, Wallet,
-  ShieldCheck, Bell, FileText, LogOut, Menu, X, Settings, CalendarPlus,
+  ShieldCheck, Bell, FileText, LogOut, Menu, X, Settings, CalendarPlus, Home,
 } from "lucide-react";
 
 const NAV = [
@@ -106,6 +107,13 @@ const AdminLayout = () => {
           <div className="flex-1 flex justify-center md:justify-start">
             {isAdmin && <GlobalSearch />}
           </div>
+          <LanguageSwitcher />
+          <Button asChild variant="outline" size="sm" className="gap-2">
+            <Link to="/">
+              <Home className="w-4 h-4" />
+              <span className="hidden sm:inline">חזרה לאתר</span>
+            </Link>
+          </Button>
           {isAdmin && <NotificationsBell />}
         </header>
         <main className="flex-1 p-4 md:p-6 overflow-x-hidden">
