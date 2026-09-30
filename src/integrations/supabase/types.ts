@@ -5,7 +5,7 @@ export type Json =
   | null
   | { [key: string]: Json | undefined }
   | Json[]
-
+ 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
@@ -603,6 +603,66 @@ export type Database = {
         }
         Relationships: []
       }
+      email_templates: {
+        Row: {
+          audience: string
+          body_html: string
+          id: string
+          is_enabled: boolean
+          language: Database["public"]["Enums"]["app_language"]
+          subject: string
+          template_key: string
+          updated_at: string
+        }
+        Insert: {
+          audience?: string
+          body_html: string
+          id?: string
+          is_enabled?: boolean
+          language: Database["public"]["Enums"]["app_language"]
+          subject: string
+          template_key: string
+          updated_at?: string
+        }
+        Update: {
+          audience?: string
+          body_html?: string
+          id?: string
+          is_enabled?: boolean
+          language?: Database["public"]["Enums"]["app_language"]
+          subject?: string
+          template_key?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      whatsapp_templates: {
+        Row: {
+          body_text: string
+          id: string
+          is_enabled: boolean
+          language: Database["public"]["Enums"]["app_language"]
+          template_key: string
+          updated_at: string
+        }
+        Insert: {
+          body_text: string
+          id?: string
+          is_enabled?: boolean
+          language: Database["public"]["Enums"]["app_language"]
+          template_key: string
+          updated_at?: string
+        }
+        Update: {
+          body_text?: string
+          id?: string
+          is_enabled?: boolean
+          language?: Database["public"]["Enums"]["app_language"]
+          template_key?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       therapists: {
         Row: {
           created_at: string
@@ -887,11 +947,11 @@ export type Database = {
     }
   }
 }
-
+ 
 type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
-
+ 
 type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
-
+ 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
@@ -920,7 +980,7 @@ export type Tables<
       ? R
       : never
     : never
-
+ 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
@@ -945,7 +1005,7 @@ export type TablesInsert<
       ? I
       : never
     : never
-
+ 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
@@ -970,7 +1030,7 @@ export type TablesUpdate<
       ? U
       : never
     : never
-
+ 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
@@ -987,7 +1047,7 @@ export type Enums<
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
-
+ 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
@@ -1004,7 +1064,7 @@ export type CompositeTypes<
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
-
+ 
 export const Constants = {
   public: {
     Enums: {
