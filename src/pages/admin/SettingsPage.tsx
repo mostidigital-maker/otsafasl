@@ -15,6 +15,7 @@ import { BlockedSlotsManager } from "@/components/admin/BlockedSlotsManager";
 import { LocationsManager } from "@/components/admin/LocationsManager";
 import { ContactSettingsManager } from "@/components/admin/ContactSettingsManager";
 import { MessageTemplatesManager } from "@/components/admin/MessageTemplatesManager";
+import { MessageLogViewer } from "@/components/admin/MessageLogViewer";
 
 interface Therapist {
   id: string; full_name: string; title: string | null;
@@ -78,6 +79,7 @@ const SettingsPage = () => {
           <TabsTrigger value="team">מטפלים</TabsTrigger>
           <TabsTrigger value="contact">פרטי האתר</TabsTrigger>
           <TabsTrigger value="messages">תבניות הודעות</TabsTrigger>
+          <TabsTrigger value="wa-log">היסטוריית וואטסאפ</TabsTrigger>
         </TabsList>
 
         <TabsContent value="contact" className="mt-6">
@@ -91,6 +93,13 @@ const SettingsPage = () => {
           <Card>
             <CardHeader><CardTitle className="text-base">תבניות מיילים והודעות וואטסאפ</CardTitle></CardHeader>
             <CardContent><MessageTemplatesManager /></CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="wa-log" className="mt-6">
+          <Card>
+            <CardHeader><CardTitle className="text-base">היסטוריית הודעות וואטסאפ</CardTitle></CardHeader>
+            <CardContent><MessageLogViewer /></CardContent>
           </Card>
         </TabsContent>
 
