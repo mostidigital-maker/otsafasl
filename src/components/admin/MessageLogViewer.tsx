@@ -11,9 +11,15 @@ interface LogRow {
   template_key: string | null;
   to_phone: string | null;
   body_text: string | null;
-  status: "sent" | "failed";
+  status: "sent" | "failed" | "opened";
   error_message: string | null;
 }
+
+const STATUS_META: Record<LogRow["status"], { label: string; variant: "default" | "destructive" | "secondary" }> = {
+  sent: { label: "נשלח", variant: "default" },
+  opened: { label: "נפתח לשליחה", variant: "secondary" },
+  failed: { label: "נכשל", variant: "destructive" },
+};
 
 const TEMPLATE_LABEL: Record<string, string> = {
   appointment_confirmed: "אישור תור",
@@ -40,7 +46,7 @@ export const MessageLogViewer = () => {
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
-          100 ההודעות האחרונות שנשלחו בוואטסאפ. הודעות שנכשלו כוללות את סיבת הכישלון.
+          100 ההודעות האחרונות. "נפתח לשליחה" = הצוות פתח את וואטסאפ עם ההודעה (השליחה בפועל תלויה שילחצו Send שם). "נשלח"/"נכשל" יופיעו רק אחרי חיבור API אוטומטי.
         </p>
         <Button variant="outline" size="sm" className="gap-1" onClick={load} disabled={loading}>
           <RefreshCw className="w-3.5 h-3.5" /> רענון
@@ -56,8 +62,8 @@ export const MessageLogViewer = () => {
       <div className="space-y-1">
         {rows.map((r) => (
           <div key={r.id} className="border rounded-lg p-3 flex items-start gap-3">
-            <Badge variant={r.status === "sent" ? "default" : "destructive"} className="mt-0.5 shrink-0">
-              {r.status === "sent" ? "נשלח" : "נכשל"}
+            <Badge variant={STATUS_META[r.status].variant} className="mt-0.5 shrink-0">
+              {STATUS_META[r.status].label}
             </Badge>
             <div className="flex-1 min-w-0">
               <div className="text-sm font-medium">
