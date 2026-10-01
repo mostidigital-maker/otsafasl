@@ -31,27 +31,43 @@ const toWaPhone = (raw: string): string => {
   return digits.startsWith("972") ? digits : "972" + digits;
 };
 
-const buildApprovalMessage = (
-  language: "ar" | "he" | "en",
-  parentName: string,
-  childName: string,
-  slotAt: string,
+const fillTemplate = (text: string, data: Record<string, string>) =>
+  text.replace(/{{\s*(\w+)\s*}}/g, (_, key) => data[key] ?? "");
+
+// Free, manual flow: looks up the admin-edited template, opens a pre-filled
+// wa.me compose window (staff still has to press send in WhatsApp), and
+// logs that it was opened. No API/provider connected — zero cost.
+const openWhatsAppFromTemplate = async (
+  kind: "confirmed" | "cancelled",
+  appt: Appointment,
   locName: string
-): string => {
-  const d = new Date(slotAt);
+) => {
+  const templateKey = kind === "confirmed" ? "appointment_confirmed" : "appointment_cancelled";
+  const { data: tmpl } = await supabase
+    .from("whatsapp_templates")
+    .select("body_text, is_enabled")
+    .eq("template_key", templateKey)
+    .eq("language", appt.language)
+    .maybeSingle();
+  if (!tmpl || !tmpl.is_enabled) return;
+
+  const d = new Date(appt.slot_at);
   const dateStr = d.toLocaleDateString(
-    language === "en" ? "en-GB" : language === "he" ? "he-IL" : "ar-EG",
+    appt.language === "en" ? "en-GB" : appt.language === "he" ? "he-IL" : "ar-EG",
     { weekday: "long", year: "numeric", month: "long", day: "numeric" }
   );
   const timeStr = d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  const message = fillTemplate(tmpl.body_text, {
+    parent_name: appt.parent_name, child_name: appt.child_name, date: dateStr, time: timeStr, location: locName,
+  });
+  const phone = toWaPhone(appt.phone);
 
-  if (language === "ar") {
-    return `مرحباً ${parentName}، تم تأكيد موعد طفلك ${childName}. التاريخ: ${dateStr}، الساعة: ${timeStr}، المكان: ${locName}. نراكم قريباً!`;
-  } else if (language === "he") {
-    return `שלום ${parentName}, התור של ${childName} אושר. תאריך: ${dateStr}, שעה: ${timeStr}, מיקום: ${locName}. נתראה בקרוב!`;
-  } else {
-    return `Hello ${parentName}, the appointment for ${childName} is confirmed. Date: ${dateStr}, Time: ${timeStr}, Location: ${locName}. See you soon!`;
-  }
+  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, "_blank");
+
+  supabase.from("message_log").insert({
+    appointment_id: appt.id, channel: "whatsapp", template_key: templateKey,
+    to_phone: phone, body_text: message, status: "opened",
+  }).then(() => {});
 };
 
 export const AppointmentsList = () => {
@@ -77,14 +93,15 @@ export const AppointmentsList = () => {
     const { error } = await supabase.from("appointments").update({ status }).eq("id", id);
     if (error) return toast({ title: "Error", description: error.message, variant: "destructive" });
     toast({ title: status === "confirmed" ? t.admin.confirmed : t.admin.cancelled });
-    if (status === "confirmed") {
-      supabase.functions.invoke("notify-appointment", { body: { appointment_id: id, kind: "confirmed" } }).catch(() => {});
-      if (appt) {
-        const loc = locs[appt.location_id];
-        const locNameStr = loc ? (loc[`name_${appt.language}` as const] || loc.name_ar) : "";
-        const msg = buildApprovalMessage(appt.language, appt.parent_name, appt.child_name, appt.slot_at, locNameStr);
-        window.open(`https://wa.me/${toWaPhone(appt.phone)}?text=${encodeURIComponent(msg)}`, "_blank");
-      }
+    if (status === "confirmed" || status === "cancelled") {
+      supabase.functions.invoke("notify-appointment", { body: { appointment_id: id, kind: status } }).catch(() => {});
+      // Automated WhatsApp via Green API is built and ready, but intentionally not called yet —
+      // staying on the free manual flow below until GREEN_API_* secrets are connected.
+    }
+    if (appt && (status === "confirmed" || status === "cancelled")) {
+      const loc = locs[appt.location_id];
+      const locNameStr = loc ? (loc[`name_${appt.language}` as const] || loc.name_ar) : "";
+      openWhatsAppFromTemplate(status, appt, locNameStr);
     }
     load();
   };
@@ -168,9 +185,8 @@ export const AppointmentsList = () => {
                       {r.status === "confirmed" && (() => {
                         const loc = locs[r.location_id];
                         const locNameStr = loc ? (loc[`name_${r.language}` as const] || loc.name_ar) : "";
-                        const msg = buildApprovalMessage(r.language, r.parent_name, r.child_name, r.slot_at, locNameStr);
                         return (
-                          <Button size="icon" variant="ghost" onClick={() => window.open(`https://wa.me/${toWaPhone(r.phone)}?text=${encodeURIComponent(msg)}`, "_blank")} title={t.booking.sendWhatsapp}>
+                          <Button size="icon" variant="ghost" onClick={() => openWhatsAppFromTemplate("confirmed", r, locNameStr)} title={t.booking.sendWhatsapp}>
                             <MessageCircle className="w-4 h-4 text-[#25D366]" />
                           </Button>
                         );
