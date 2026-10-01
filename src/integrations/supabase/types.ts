@@ -636,6 +636,50 @@ export type Database = {
         }
         Relationships: []
       }
+      message_log: {
+        Row: {
+          appointment_id: string | null
+          body_text: string | null
+          channel: string
+          created_at: string
+          error_message: string | null
+          id: string
+          status: string
+          template_key: string | null
+          to_phone: string | null
+        }
+        Insert: {
+          appointment_id?: string | null
+          body_text?: string | null
+          channel?: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          status?: string
+          template_key?: string | null
+          to_phone?: string | null
+        }
+        Update: {
+          appointment_id?: string | null
+          body_text?: string | null
+          channel?: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          status?: string
+          template_key?: string | null
+          to_phone?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_log_appointment_id_fkey"
+            columns: ["appointment_id"]
+            isOneToOne: false
+            referencedRelation: "appointments"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       whatsapp_templates: {
         Row: {
           body_text: string
