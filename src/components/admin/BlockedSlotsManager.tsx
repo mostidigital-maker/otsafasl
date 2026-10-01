@@ -1,3 +1,4 @@
+import { useLiveRefresh } from "@/hooks/useLiveRefresh";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +20,7 @@ export const BlockedSlotsManager = () => {
   const [locationId, setLocationId] = useState("");
   const [form, setForm] = useState({ start_at: "", end_at: "", reason: "" });
 
+  useLiveRefresh(["blocked_slots"], () => load());
   const load = async () => {
     const { data } = await supabase.from("blocked_slots").select("*").order("start_at");
     if (data) setItems(data as BS[]);

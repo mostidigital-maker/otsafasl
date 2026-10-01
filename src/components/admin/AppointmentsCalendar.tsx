@@ -1,3 +1,4 @@
+import { useLiveRefresh } from "@/hooks/useLiveRefresh";
 import { useEffect, useMemo, useState } from "react";
 import {
   addDays, addMonths, addWeeks, endOfMonth, endOfWeek, format,
@@ -40,6 +41,7 @@ export const AppointmentsCalendar = () => {
   const [cursor, setCursor] = useState<Date>(new Date());
   const [dayDialog, setDayDialog] = useState<Date | null>(null);
 
+  useLiveRefresh(["appointments","blocked_slots"], () => load());
   const load = async () => {
     const [a, l] = await Promise.all([
       supabase.from("appointments").select("id,location_id,slot_at,child_name,child_age,parent_name,phone,status").is("deleted_at", null).order("slot_at"),

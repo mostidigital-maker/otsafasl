@@ -1,3 +1,4 @@
+import { useLiveRefresh } from "@/hooks/useLiveRefresh";
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,7 @@ export const NotesTab = ({ patientId }: { patientId: string }) => {
   const [text, setText] = useState("");
   const [saving, setSaving] = useState(false);
 
+  useLiveRefresh(["internal_notes"], () => load());
   const load = async () => {
     const { data } = await supabase.from("internal_notes").select("id, content, created_at")
       .eq("patient_id", patientId).is("deleted_at", null)

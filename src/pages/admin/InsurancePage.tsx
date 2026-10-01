@@ -1,3 +1,4 @@
+import { useLiveRefresh } from "@/hooks/useLiveRefresh";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
@@ -23,6 +24,7 @@ const InsurancePage = () => {
   const [selected, setSelected] = useState<Record<string, boolean>>({});
   const [busy, setBusy] = useState(false);
 
+  useLiveRefresh(["payments","insurance_claims"], () => load());
   const load = () => {
     supabase.from("payments").select("*, patient:patients(id, full_name, national_id)")
       .is("deleted_at", null)
