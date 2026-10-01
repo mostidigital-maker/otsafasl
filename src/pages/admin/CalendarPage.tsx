@@ -19,6 +19,51 @@ const waLink = (raw: string) => {
   return `https://wa.me/${n}`;
 };
 
+const toWaPhone = (raw: string) => {
+  const d = raw.replace(/\D/g, "");
+  return d.startsWith("972") ? d : d.startsWith("0") ? "972" + d.slice(1) : d;
+};
+
+const fillTemplate = (text: string, data: Record<string, string>) =>
+  text.replace(/{{\s*(\w+)\s*}}/g, (_, key) => data[key] ?? "");
+
+// Free, manual flow: looks up the admin-edited template, opens a pre-filled
+// wa.me compose window (staff still has to press send in WhatsApp), and
+// logs that it was opened. No API/provider connected — zero cost. Available
+// to both admin and secretary (RLS on whatsapp_templates/message_log allows both).
+const openWhatsAppFromTemplate = async (
+  kind: "confirmed" | "cancelled",
+  appt: Appointment,
+  locName: string
+) => {
+  const templateKey = kind === "confirmed" ? "appointment_confirmed" : "appointment_cancelled";
+  const { data: tmpl } = await supabase
+    .from("whatsapp_templates")
+    .select("body_text, is_enabled")
+    .eq("template_key", templateKey)
+    .eq("language", appt.language)
+    .maybeSingle();
+  if (!tmpl || !tmpl.is_enabled) return;
+
+  const d = new Date(appt.slot_at);
+  const dateStr = d.toLocaleDateString(
+    appt.language === "en" ? "en-GB" : appt.language === "he" ? "he-IL" : "ar-EG",
+    { weekday: "long", year: "numeric", month: "long", day: "numeric" }
+  );
+  const timeStr = d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  const message = fillTemplate(tmpl.body_text, {
+    parent_name: appt.parent_name, child_name: appt.child_name, date: dateStr, time: timeStr, location: locName,
+  });
+  const phone = toWaPhone(appt.phone);
+
+  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, "_blank");
+
+  supabase.from("message_log").insert({
+    appointment_id: appt.id, channel: "whatsapp", template_key: templateKey,
+    to_phone: phone, body_text: message, status: "opened",
+  }).then(() => {});
+};
+
 type Status = "pending" | "confirmed" | "cancelled" | "arrived" | "completed" | "no_show";
 
 interface Appointment {
@@ -31,8 +76,9 @@ interface Appointment {
   phone: string;
   status: Status;
   patient_id: string | null;
+  language: "ar" | "he" | "en";
 }
-interface Loc { id: string; name_he: string }
+interface Loc { id: string; name_ar: string; name_he: string; name_en: string }
 
 type View = "month" | "week" | "day";
 
@@ -58,8 +104,8 @@ const CalendarPage = () => {
 
   const load = async () => {
     const [a, l] = await Promise.all([
-      supabase.from("appointments").select("id,location_id,slot_at,child_name,child_age,parent_name,phone,status,patient_id").is("deleted_at", null).order("slot_at"),
-      supabase.from("locations").select("id,name_he"),
+      supabase.from("appointments").select("id,location_id,slot_at,child_name,child_age,parent_name,phone,status,patient_id,language").is("deleted_at", null).order("slot_at"),
+      supabase.from("locations").select("id,name_ar,name_he,name_en"),
     ]);
     if (a.data) setRows(a.data as Appointment[]);
     if (l.data) setLocs(l.data as Loc[]);
@@ -86,12 +132,20 @@ const CalendarPage = () => {
     );
 
   const setStatus = async (id: string, status: Status) => {
+    const appt = rows.find((r) => r.id === id);
     const { error } = await supabase.from("appointments").update({ status }).eq("id", id);
     if (error) return toast({ title: "שגיאה", description: error.message, variant: "destructive" });
     toast({ title: status === "confirmed" ? "התור אושר" : "עודכן" });
     setRows(prev => prev.map(r => r.id === id ? { ...r, status } : r));
-    if (status === "confirmed") {
-      supabase.functions.invoke("notify-appointment", { body: { appointment_id: id, kind: "confirmed" } }).catch(() => {});
+    if (status === "confirmed" || status === "cancelled") {
+      supabase.functions.invoke("notify-appointment", { body: { appointment_id: id, kind: status } }).catch(() => {});
+      // Automated WhatsApp via Green API is built and ready, but intentionally not called yet —
+      // staying on the free manual flow below until GREEN_API_* secrets are connected.
+    }
+    if (appt && (status === "confirmed" || status === "cancelled")) {
+      const loc = locs.find((l) => l.id === appt.location_id);
+      const locNameStr = loc ? (loc[`name_${appt.language}` as const] || loc.name_he) : "";
+      openWhatsAppFromTemplate(status, appt, locNameStr);
     }
   };
 
