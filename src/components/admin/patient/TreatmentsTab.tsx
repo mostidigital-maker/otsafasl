@@ -1,3 +1,4 @@
+import { useLiveRefresh } from "@/hooks/useLiveRefresh";
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -35,6 +36,7 @@ export const TreatmentsTab = ({ patientId, patientName = "" }: { patientId: stri
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
 
+  useLiveRefresh(["treatments"], () => load());
   const load = async () => {
     const { data } = await supabase.from("treatments").select("*")
       .eq("patient_id", patientId).is("deleted_at", null)

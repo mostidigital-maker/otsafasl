@@ -1,3 +1,4 @@
+import { useLiveRefresh } from "@/hooks/useLiveRefresh";
 import { useEffect, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,7 @@ export const FilesTab = ({ patientId }: { patientId: string }) => {
   const [uploading, setUploading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  useLiveRefresh(["patient_files"], () => load());
   const load = async () => {
     const { data } = await supabase.from("patient_files").select("*")
       .eq("patient_id", patientId).is("deleted_at", null)

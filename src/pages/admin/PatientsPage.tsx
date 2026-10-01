@@ -1,3 +1,4 @@
+import { useLiveRefresh } from "@/hooks/useLiveRefresh";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
@@ -38,6 +39,7 @@ const PatientsPage = () => {
   const [saving, setSaving] = useState(false);
   const [toDelete, setToDelete] = useState<Patient | null>(null);
 
+  useLiveRefresh(["patients"], () => load());
   const load = async () => {
     setLoading(true);
     const { data, error } = await supabase

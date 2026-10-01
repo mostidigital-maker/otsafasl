@@ -1,3 +1,4 @@
+import { useLiveRefresh } from "@/hooks/useLiveRefresh";
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -25,6 +26,7 @@ export const AppointmentsTab = ({ patientId }: { patientId: string }) => {
   const { toast } = useToast();
   const [rows, setRows] = useState<Row[]>([]);
 
+  useLiveRefresh(["appointments"], () => load());
   const load = async () => {
     const { data } = await supabase
       .from("appointments")

@@ -1,3 +1,4 @@
+import { useLiveRefresh } from "@/hooks/useLiveRefresh";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
@@ -26,6 +27,7 @@ const PaymentsPage = () => {
   const [from, setFrom] = useState(format(startOfMonth(today), "yyyy-MM-dd"));
   const [to, setTo] = useState(format(endOfMonth(today), "yyyy-MM-dd"));
 
+  useLiveRefresh(["payments"], () => load());
   const load = () => {
     supabase.from("payments").select("*, patient:patients(id, full_name)")
       .is("deleted_at", null).order("payment_date", { ascending: false })

@@ -1,3 +1,4 @@
+import { useLiveRefresh } from "@/hooks/useLiveRefresh";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
@@ -17,6 +18,7 @@ const RemindersPage = () => {
   const [rows, setRows] = useState<Row[]>([]);
   const [filter, setFilter] = useState<"pending" | "all">("pending");
 
+  useLiveRefresh(["follow_up_reminders"], () => load());
   const load = async () => {
     let q = supabase.from("follow_up_reminders")
       .select("id, suggested_date, priority, status, notes, patient:patients(id, full_name, phone)")

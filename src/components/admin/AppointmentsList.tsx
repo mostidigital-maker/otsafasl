@@ -1,3 +1,4 @@
+import { useLiveRefresh } from "@/hooks/useLiveRefresh";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -77,6 +78,7 @@ export const AppointmentsList = () => {
   const [locs, setLocs] = useState<Record<string, Loc>>({});
   const [filter, setFilter] = useState<"all" | "pending" | "confirmed" | "cancelled">("pending");
 
+  useLiveRefresh(["appointments"], () => load());
   const load = async () => {
     const [a, l] = await Promise.all([
       supabase.from("appointments").select("*").is("deleted_at", null).order("slot_at", { ascending: true }),

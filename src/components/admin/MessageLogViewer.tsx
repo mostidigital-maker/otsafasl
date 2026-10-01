@@ -1,3 +1,4 @@
+import { useLiveRefresh } from "@/hooks/useLiveRefresh";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
@@ -30,6 +31,7 @@ export const MessageLogViewer = () => {
   const [rows, setRows] = useState<LogRow[]>([]);
   const [loading, setLoading] = useState(false);
 
+  useLiveRefresh(["message_log"], () => load());
   const load = async () => {
     setLoading(true);
     const { data } = await supabase
