@@ -12,7 +12,6 @@ import AdminLayout from "./pages/admin/AdminLayout";
 import DashboardPage from "./pages/admin/DashboardPage";
 import PatientsPage from "./pages/admin/PatientsPage";
 import PatientProfilePage from "./pages/admin/PatientProfilePage";
-import LegacyAdminPage from "./pages/admin/LegacyAdminPage";
 import RemindersPage from "./pages/admin/RemindersPage";
 import PaymentsPage from "./pages/admin/PaymentsPage";
 import InsurancePage from "./pages/admin/InsurancePage";
@@ -21,6 +20,7 @@ import ReportsPage from "./pages/admin/ReportsPage";
 import TreatmentsPage from "./pages/admin/TreatmentsPage";
 import SettingsPage from "./pages/admin/SettingsPage";
 import NewAppointmentPage from "./pages/admin/NewAppointmentPage";
+import AppointmentsListPage from "./pages/admin/AppointmentsListPage";
 import CalendarPage from "./pages/admin/CalendarPage";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 
@@ -57,7 +57,7 @@ const App = () => (
               <Route path="patients/:id" element={<PatientProfilePage />} />
               <Route path="calendar" element={<CalendarPage />} />
               <Route path="new-appointment" element={<NewAppointmentPage />} />
-              <Route path="legacy" element={<LegacyAdminPage />} />
+              <Route path="appointments" element={<AppointmentsListPage />} />
               <Route path="treatments" element={<TreatmentsPage />} />
               <Route path="payments" element={<PaymentsPage />} />
               <Route path="insurance" element={<InsurancePage />} />
