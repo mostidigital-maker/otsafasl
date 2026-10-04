@@ -7,7 +7,7 @@ import NotificationsBell from "@/components/admin/NotificationsBell";
 import { LanguageSwitcher } from "@/components/landing/LanguageSwitcher";
 import {
   LayoutDashboard, Users, Calendar, ClipboardList, Wallet,
-  ShieldCheck, Bell, FileText, LogOut, Menu, X, Settings, CalendarPlus, Home,
+  ShieldCheck, Bell, FileText, LogOut, Menu, X, Settings, CalendarPlus, Home, ListChecks,
 } from "lucide-react";
 
 const NAV = [
@@ -15,6 +15,7 @@ const NAV = [
   { to: "/admin/patients", label: "מטופלים", icon: Users, adminOnly: true },
   { to: "/admin/calendar", label: "יומן תורים", icon: Calendar },
   { to: "/admin/new-appointment", label: "תור חדש", icon: CalendarPlus },
+  { to: "/admin/appointments", label: "רשימת תורים", icon: ListChecks },
   { to: "/admin/treatments", label: "טיפולים", icon: ClipboardList, adminOnly: true },
   { to: "/admin/payments", label: "תשלומים", icon: Wallet, adminOnly: true },
   { to: "/admin/insurance", label: "ביטוח", icon: ShieldCheck, adminOnly: true },
@@ -24,7 +25,7 @@ const NAV = [
 ];
 
 // A secretary may only use these pages (RLS enforces the same on the database side).
-const SECRETARY_PATHS = ["/admin/calendar", "/admin/new-appointment"];
+const SECRETARY_PATHS = ["/admin/calendar", "/admin/new-appointment", "/admin/appointments"];
 
 const AdminLayout = () => {
   const nav = useNavigate();
