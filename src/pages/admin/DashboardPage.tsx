@@ -51,8 +51,8 @@ const DashboardPage = () => {
         supabase.from("follow_up_reminders").select("id", { count: "exact", head: true })
           .eq("status", "pending").is("deleted_at", null),
         supabase.from("appointments").select("status"),
-        supabase.from("payments").select("payment_date, treatment_price, patient_paid, insurance_paid")
-          .is("deleted_at", null).gte("payment_date", subMonths(monthStart, 5).toISOString().slice(0, 10)),
+        supabase.from("payments").select("payment_date, treatment_price, patient_paid, insurance_paid, needs_insurance_submission")
+          .is("deleted_at", null),
         supabase.from("audit_log").select("id, action, table_name, created_at")
           .order("created_at", { ascending: false }).limit(8),
       ]);
@@ -69,13 +69,16 @@ const DashboardPage = () => {
         buckets[format(d, "yyyy-MM")] = 0;
       }
       let monthIncome = 0;
+      let monthReceived = 0;
       let outstanding = 0;
+      const monthStartStr = format(monthStart, "yyyy-MM-dd");
       (pays.data ?? []).forEach((r: any) => {
         const key = r.payment_date?.slice(0, 7);
         const paid = Number(r.patient_paid || 0) + Number(r.insurance_paid || 0);
-        const bal = Number(r.treatment_price || 0) - paid;
+        const received = effectivePaid(r);
+        const bal = balanceOf(r);
         if (key && key in buckets) buckets[key] += paid;
-        if (r.payment_date >= format(monthStart, "yyyy-MM-dd")) monthIncome += paid;
+        if (r.payment_date >= monthStartStr) { monthIncome += paid; monthReceived += received; }
         if (bal > 0) outstanding += bal;
       });
       setMonthly(Object.entries(buckets).map(([k, v]) => ({
@@ -102,6 +105,7 @@ const DashboardPage = () => {
     { label: "תורים עתידיים", value: s.upcoming, icon: Calendar, color: "text-secondary", to: "/admin/calendar" },
     { label: "תזכורות ממתינות", value: s.pendingReminders, icon: Bell, color: "text-secondary", to: "/admin/reminders" },
     { label: "הכנסות החודש", value: `₪${s.monthIncome.toLocaleString()}`, icon: TrendingUp, color: "text-primary", to: "/admin/payments" },
+    { label: "כסף שהתקבל החודש", value: `₪${s.monthReceived.toLocaleString()}`, icon: Wallet, color: "text-primary", to: "/admin/payments" },
     { label: "יתרות פתוחות", value: `₪${s.outstanding.toLocaleString()}`, icon: Wallet, color: "text-destructive", to: "/admin/payments" },
   ];
 
