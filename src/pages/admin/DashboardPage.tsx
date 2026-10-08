@@ -8,10 +8,11 @@ import {
   PieChart, Pie, Cell, CartesianGrid, Legend,
 } from "recharts";
 import { format, subMonths, startOfMonth, endOfMonth } from "date-fns";
+import { balanceOf, effectivePaid } from "@/components/admin/PaymentFormDialog";
 
 interface Stats {
   patients: number; todayAppts: number; upcoming: number; pendingReminders: number; pendingAppts: number;
-  monthIncome: number; outstanding: number;
+  monthIncome: number; monthReceived: number; outstanding: number;
 }
 interface Activity { id: number | string; action: string; table_name: string; created_at: string; }
 
@@ -30,7 +31,7 @@ const STATUS_LABELS: Record<string, string> = {
 
 const DashboardPage = () => {
   const [s, setS] = useState<Stats>({
-    patients: 0, todayAppts: 0, upcoming: 0, pendingReminders: 0, pendingAppts: 0, monthIncome: 0, outstanding: 0,
+    patients: 0, todayAppts: 0, upcoming: 0, pendingReminders: 0, pendingAppts: 0, monthIncome: 0, monthReceived: 0, outstanding: 0,
   });
   const [statusData, setStatusData] = useState<{ name: string; value: number; key: string }[]>([]);
   const [monthly, setMonthly] = useState<{ month: string; income: number }[]>([]);
@@ -92,7 +93,7 @@ const DashboardPage = () => {
         upcoming: upApp.count ?? 0,
         pendingReminders: rem.count ?? 0,
         pendingAppts: counts["pending"] ?? 0,
-        monthIncome, outstanding,
+        monthIncome, monthReceived, outstanding,
       });
       setActivity((log.data ?? []) as Activity[]);
     })();
